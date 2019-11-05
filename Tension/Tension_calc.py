@@ -441,7 +441,7 @@ def tension_welded_design(uiObj):
         A_tn = 0
 
     elif conn=="Flange":
-        Member_An = Member_Ag
+        Member_An = Member_Ag - (member_d * member_tw/2)
         A_vg = Inline_Weld * member_tf
         A_vn = A_vg
         A_tg = Oppline_Weld * member_tf

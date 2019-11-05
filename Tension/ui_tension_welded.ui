@@ -3102,7 +3102,7 @@ QMenu::item:selected {
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>300</y>
+       <y>340</y>
        <width>131</width>
        <height>51</height>
       </rect>
@@ -3127,7 +3127,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>310</y>
+       <y>350</y>
        <width>160</width>
        <height>27</height>
       </rect>
@@ -3499,7 +3499,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>370</y>
+       <y>410</y>
        <width>160</width>
        <height>27</height>
       </rect>
@@ -3516,7 +3516,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>360</y>
+       <y>400</y>
        <width>131</width>
        <height>51</height>
       </rect>
@@ -3540,8 +3540,8 @@ p, li { white-space: pre-wrap; }
     <widget class="QLineEdit" name="txt_plate_thk">
      <property name="geometry">
       <rect>
-       <x>147</x>
-       <y>417</y>
+       <x>150</x>
+       <y>297</y>
        <width>160</width>
        <height>27</height>
       </rect>
@@ -3561,7 +3561,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>420</y>
+       <y>300</y>
        <width>121</width>
        <height>25</height>
       </rect>

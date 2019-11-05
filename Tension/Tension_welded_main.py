@@ -1464,7 +1464,8 @@ class Maincontroller(QMainWindow):
 			pass
 
 		dictmemberdata = self.fetchMembPara()
-		plate_thick = float(uiObj["Weld"]["Platethickness"])
+
+		plate_thick = float(self.ui.txt_plate_thk.text())
 		if self.ui.combo_sectiontype.currentText() != "Angles":
 			member_d = float(dictmemberdata["D"])
 			member_B = float(dictmemberdata["B"])
@@ -1477,23 +1478,20 @@ class Maincontroller(QMainWindow):
 			max_leg = max(leg1, leg2)
 		loc = self.ui.combo_conn_loc.currentText()
 		if loc == "Flange":
-			min_weld_length = member_B
-			max_weld_length = (2 * member_B - 4 * plate_thick)
+			min_weld_length = round((member_B,3))
+			max_weld_length = round((2 * member_B - 4 * plate_thick),3)
 		elif loc == "Web":
-			min_weld_length = 0.6 * member_d
-			max_weld_length = member_d - 2 * plate_thick
-
+			min_weld_length = round((0.6 * member_d),3)
+			max_weld_length = round((member_d - 2 * plate_thick),3)
 		elif loc == "Back to Back Web":
-			min_weld_length = 2* 0.6 * member_d
-			max_weld_length = 2* member_d
-
-
+			min_weld_length = round((2* 0.6 * member_d),3)
+			max_weld_length = round((2* member_d),3)
 		elif loc == "Leg":
-			min_weld_length = min_leg
-			max_weld_length = max_leg
+			min_weld_length = round(min_leg,3)
+			max_weld_length = round(max_leg,3)
 		elif loc == "Star Angles" or loc == "Back to Back Angles":
-			min_weld_length = (min_leg + min_leg)
-			max_weld_length = (max_leg + max_leg)
+			min_weld_length = round((min_leg + min_leg),3)
+			max_weld_length = round((max_leg + max_leg),3)
 
 		text_str = widget.text()
 

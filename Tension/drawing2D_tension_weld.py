@@ -2732,21 +2732,21 @@ class Side_View (object):
 
 				# ------------------------------------------  Weld triangle  UP-------------------------------------------
 				self.B1 = self.A13
-				self.B2 = self.A13 + self.data_object.member_tf * np.array([-1, 0])
-				self.B3 = self.A13 + self.data_object.member_tf * np.array([0, -1])
+				self.B2 = self.A13 + self.data_object.plate_thickness * np.array([-1, 0])
+				self.B3 = self.A13 + self.data_object.plate_thickness * np.array([0, -1])
 
 				self.B4 = self.A16
-				self.B5 = self.A16 + self.data_object.member_tf * np.array([1, 0])
-				self.B6 = self.A16 + self.data_object.member_tf * np.array([0, -1])
+				self.B5 = self.A16 + self.data_object.plate_thickness * np.array([1, 0])
+				self.B6 = self.A16 + self.data_object.plate_thickness* np.array([0, -1])
 
 				# ------------------------------------------  Weld triangle  DOWN-------------------------------------------
 				self.B11 = self.A17
-				self.B12 = self.A17 + self.data_object.member_tf * np.array([-1, 0])
-				self.B13 = self.A17 + self.data_object.member_tf * np.array([0, 1])
+				self.B12 = self.A17 + self.data_object.plate_thickness* np.array([-1, 0])
+				self.B13 = self.A17 + self.data_object.plate_thickness* np.array([0, 1])
 
 				self.B14 = self.A20
-				self.B15 = self.A20 + self.data_object.member_tf * np.array([1, 0])
-				self.B16 = self.A20 + self.data_object.member_tf * np.array([0, 1])
+				self.B15 = self.A20 + self.data_object.plate_thickness * np.array([1, 0])
+				self.B16 = self.A20 + self.data_object.plate_thickness* np.array([0, 1])
 
 			else:
 				ptA13x = ptA6x
@@ -2918,6 +2918,14 @@ class Side_View (object):
 				dwg.add(dwg.line(self.A13, self.A14).stroke('blue', width=1, linecap='square'))
 				dwg.add(dwg.line(self.A14, self.A15).stroke('blue', width=1, linecap='square'))
 				dwg.add(dwg.line(self.A15, self.A16).stroke('blue', width=1, linecap='square'))
+				dwg.add(dwg.polyline(points=[self.B1, self.B2, self.B3, self.B1], stroke='black', fill='red',
+									 stroke_width=1))
+				dwg.add(dwg.polyline(points=[self.B4, self.B5, self.B6, self.B4], stroke='black', fill='red',
+									 stroke_width=1))
+				dwg.add(dwg.polyline(points=[self.B11, self.B12, self.B13, self.B11], stroke='black', fill='red',
+									 stroke_width=1))
+				dwg.add(dwg.polyline(points=[self.B14, self.B15, self.B16, self.B14], stroke='black', fill='red',
+									 stroke_width=1))
 
 
 
