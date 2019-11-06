@@ -731,7 +731,8 @@ def bc_endplate_design(uiObj):
         if plate_tk >= cont_plate_tens_tk_min:
             cont_plate_tens_tk = plate_tk
             break
-
+    print(1)
+    print(cont_plate_comp_tk, cont_plate_tens_tk, column_tw, beam_tw)
     #conisering both plates thickness as same for practical reasons
     if cont_plate_comp_tk > cont_plate_tens_tk:
         cont_plate_tens_tk = cont_plate_comp_tk
@@ -742,9 +743,11 @@ def bc_endplate_design(uiObj):
     # continuity plate weld design on compression side
     # same is assumed for tension side
     cont_web_weld_size_min = IS800_2007.cl_10_5_2_3_min_weld_size(cont_plate_comp_tk, column_tw)
-    cont_web_weld_size_max = min(beam_tw, cont_plate_comp_tk)
+    cont_web_weld_size_max = min(column_tw, cont_plate_comp_tk)
     available_welds = list([x for x in welds_sizes if (cont_web_weld_size_min <= x <= cont_web_weld_size_max)])
+    print(available_welds, cont_web_weld_size_min, cont_web_weld_size_max)
     for cont_web_weld_size in available_welds:
+        print(available_welds, cont_web_weld_size)
         cont_web_weld_throat = IS800_2007.cl_10_5_3_2_fillet_weld_effective_throat_thickness(
             fillet_size=cont_web_weld_size, fusion_face_angle=90)
         cont_web_weld_eff_length = IS800_2007.cl_10_5_4_1_fillet_weld_effective_length(
@@ -757,7 +760,9 @@ def bc_endplate_design(uiObj):
     cont_flange_weld_size_min = IS800_2007.cl_10_5_2_3_min_weld_size(cont_plate_comp_tk, column_tf)
     cont_flange_weld_size_max = max(column_tf, cont_plate_comp_tk)
     available_welds = list([x for x in welds_sizes if (cont_flange_weld_size_min <= x <= cont_flange_weld_size_max)])
+
     for cont_flange_weld_size in available_welds:
+        print(available_welds, cont_flange_weld_size)
         cont_flange_weld_throat = IS800_2007.cl_10_5_3_2_fillet_weld_effective_throat_thickness(
             fillet_size=cont_flange_weld_size, fusion_face_angle=90)
         cont_flange_Weld_eff_length = IS800_2007.cl_10_5_4_1_fillet_weld_effective_length(
