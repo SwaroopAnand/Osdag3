@@ -6,15 +6,15 @@ Created on 31-Mar-2016
 '''
 
 import sys
-from PyQt5 import Qt
+# from PyQt5 import Qt
 
-from PyQt5.QtCore import pyqtSlot,pyqtSignal, QObject
+# from PyQt5.QtCore import pyqtSlot,pyqtSignal, QObject
 from PyQt5.QtWidgets import QMainWindow, QDialog,QMessageBox, QFileDialog, QApplication
-from Osdag3.ui_OsdagMainPage import Ui_MainWindow
-from Osdag3.ui_tutorial import Ui_Tutorial
-from Osdag3.ui_aboutosdag import Ui_AboutOsdag
-from Osdag3.ui_ask_question import Ui_AskQuestion
-from Osdag3.Connections.Shear.Finplate.finPlateMain import launchFinPlateController
+from ui_OsdagMainPage import Ui_MainWindow
+from ui_tutorial import Ui_Tutorial
+from ui_aboutosdag import Ui_AboutOsdag
+from ui_ask_question import Ui_AskQuestion
+from Connections.Shear.Finplate.finPlateMain import launchFinPlateController
 
 import os
 from Connections.Shear.SeatedAngle.seat_angle_main import launchSeatedAngleController
@@ -135,7 +135,7 @@ class OsdagMainWindow(QMainWindow):
 
 
         config = configparser.ConfigParser()
-        config.readfp(open(r'Osdag.config'))
+        config.read_file(open(r'Osdag.config'))
         desktop_path = config.get("desktop_path", "path1")
         folder = QFileDialog.getExistingDirectory(self, "Select Workspace Folder (Don't use spaces in the folder name)", desktop_path)
 
@@ -227,11 +227,11 @@ class OsdagMainWindow(QMainWindow):
                     shutil.rmtree(os.path.join(folder, create_folder))
                     os.mkdir(os.path.join(root_path, create_folder))
 
-        if self.ui.rdbtn_coverplate.isChecked():
+        if self.ui.rdbtn_coverplate_7.isChecked():
             launch_coverplate_controller(self, folder)
             self.ui.myStackedWidget.setCurrentIndex(0)
 
-        elif self.ui.rdbtn_endplate_ext.isChecked():
+        elif self.ui.rdbtn_endplate_ext_7.isChecked():
             launch_extendedendplate_controller(self, folder)
             self.ui.myStackedWidget.setCurrentIndex(0)
 
@@ -266,7 +266,7 @@ class OsdagMainWindow(QMainWindow):
 
 
 
-        if self.ui.rdbtn_endplate_bc.isChecked():
+        if self.ui.rdbtn_endplate_bc_7.isChecked():
             launch_bc_endplate_controller(self, folder)
             self.ui.myStackedWidget.setCurrentIndex(0)
 

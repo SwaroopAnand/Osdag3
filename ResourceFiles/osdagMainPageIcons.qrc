@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="newPrefix">
+    <file>osdagMainPageIcons.qrc</file>
     <file>images/extended.png</file>
     <file>images/coverplate.png</file>
     <file>images/click_image.png</file>
