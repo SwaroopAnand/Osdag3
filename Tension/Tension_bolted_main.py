@@ -17,13 +17,8 @@ from .Tension_calc import tension_bolted_design
 from .reportGenerator import save_html
 from OCC.Display.backend import load_backend, get_qt_modules
 # from drawing_2D import ExtendedEndPlate
-from OCC.Core.Graphic3d import Graphic3d_NOT_2D_ALUMINUM
-# from drawing2D_bothway import ExtendedEndPlate
-# from drawing2D_oneway import OnewayEndPlate
-# from drawing2D_flush import FlushEndPlate
-# from drawing2D_WWbothway import ExtendedEndPlate_WW
-# from drawing2D_WWoneway import OnewayEndPlate_WW
-# from drawing2D_WWflush import FlushEndPlate_WW
+# from OCC.Core.Graphic3d import Graphic3d_NOT_2D_ALUMINUM
+
 
 from PyQt5.QtWidgets import QDialog, QApplication, QMainWindow, QFontDialog, QFileDialog
 from PyQt5.Qt import QColor, QBrush, Qt, QIntValidator, QDoubleValidator, QFile, QTextStream, pyqtSignal, QColorDialog, \
