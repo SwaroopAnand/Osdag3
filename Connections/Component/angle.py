@@ -4,16 +4,6 @@ Created on 14-Oct-2015
 
 @author: Deepa
 '''
-import numpy
-import math
-from OCC.Core.BRepFilletAPI import BRepFilletAPI_MakeFillet
-from OCC.Core.GC import GC_MakeArcOfCircle
-from OCC.Core.TopExp import TopExp_Explorer
-from OCC.Core.TopoDS import topods
-from OCC.Core.TopAbs import TopAbs_EDGE
-from .ModelUtils import getGpPt, make_edge, makeWireFromEdges, \
-    makeFaceFromWire, makePrismFromFace,makeEdgesFromPoints
-
 """
     +
     |   a2  XXXXXXXXXX    a4
@@ -60,8 +50,10 @@ from OCC.Core.GC import GC_MakeArcOfCircle
 from OCC.Core.TopExp import TopExp_Explorer
 from OCC.Core.TopoDS import topods
 from OCC.Core.TopAbs import TopAbs_EDGE
-from .ModelUtils import getGpPt, make_edge, makeWireFromEdges, \
-    makeFaceFromWire, makePrismFromFace
+from Connections.Component.ModelUtils import getGpPt, make_edge, makeWireFromEdges,makeFaceFromWire, makePrismFromFace
+
+# from OCC.Display.SimpleGui import init_display
+# display, start_display, add_menu, add_function_to_menu = init_display()
 
 
 class Angle(object):
@@ -70,10 +62,10 @@ class Angle(object):
         self.A = A
         self.B = B
         self.T = T
-        #self.R1 = R1
-        self.R1 = 0.0
-        #self.R2 = R2
-        self.R2 = 0.0
+        self.R1 = R1
+        # self.R1 = 0.0
+        self.R2 = R2
+        # self.R2 = 0.0
         self.sec_origin = numpy.array([0, 0, 0])
         self.uDir = numpy.array([1.0, 0, 0])
         self.wDir = numpy.array([0.0, 0, 1.0])
@@ -164,12 +156,29 @@ class Angle(object):
         aFace = makeFaceFromWire(wire)
         extrudeDir = self.L * self.wDir  # extrudeDir is a numpy array
         prism = makePrismFromFace(aFace, extrudeDir)
-        mkFillet = BRepFilletAPI_MakeFillet(prism)
-        anEdgeExplorer = TopExp_Explorer(prism, TopAbs_EDGE)
-        while anEdgeExplorer.More():
-            aEdge = topods.Edge(anEdgeExplorer.Current())
-            mkFillet.Add(self.T / 17., aEdge)
-            anEdgeExplorer.Next()
-
-        prism = mkFillet.Shape()
+        # mkFillet = BRepFilletAPI_MakeFillet(prism)
+        # anEdgeExplorer = TopExp_Explorer(prism, TopAbs_EDGE)
+        # while anEdgeExplorer.More():
+        #     aEdge = topods.Edge(anEdgeExplorer.Current())
+        #     mkFillet.Add(self.T / 17., aEdge)
+        #     anEdgeExplorer.Next()
+        #
+        # prism = mkFillet.Shape()
         return prism
+
+# L = 500
+# A = 100
+# B = 100
+# T = 6
+#
+# origin = numpy.array([0.,0.,0.])
+# uDir = numpy.array([1.,0.,0.])
+# shaftDir = numpy.array([0.,0.,1.])
+#
+# angle = Angle(L,A,B,T,8.5,5.5)
+# angles = angle.place(origin, uDir, shaftDir)
+# point = angle.computeParams()
+# prism = angle.create_model()
+# display.DisplayShape(prism, update=True)
+# display.DisableAntiAliasing()
+# start_display()

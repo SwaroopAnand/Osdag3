@@ -4,10 +4,13 @@ Created on 29-Nov-2014
 @author: deepa
 '''
 import numpy
-from .ModelUtils import *
+from Connections.Component.ModelUtils import *
 from OCC.Core.BRepAlgoAPI import BRepAlgoAPI_Cut
 #from notch import Notch
 from Connections.Component.notch import Notch
+
+# from OCC.Display.SimpleGui import init_display
+# display, start_display, add_menu, add_function_to_menu = init_display()
 """
                           ^ v
                               |
@@ -108,3 +111,22 @@ class ISection(object):
             prism = BRepAlgoAPI_Cut(prism, notchModel).Shape()
 
         return prism
+
+#
+# B = 20
+# T = 2
+# D = 40
+# t = 1
+# L = 10
+#
+# origin = numpy.array([0.,0.,0.])
+# uDir = numpy.array([1.,0.,0.])
+# shaftDir = numpy.array([0.,0.,1.])
+#
+# angle = ISection(B, T, D, t, 0,0,0, L, None)
+# angles = angle.place(origin, uDir, shaftDir)
+# point = angle.compute_params()
+# prism = angle.create_model()
+# display.DisplayShape(prism, update=True)
+# display.DisableAntiAliasing()
+# start_display()
