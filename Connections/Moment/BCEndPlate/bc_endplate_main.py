@@ -1841,8 +1841,6 @@ class Maincontroller(QMainWindow):
         column_data = self.fetchColumnPara()
         beam_data = self.fetchBeamPara()
 
-        # TODO check if column data is working
-
         column_tw = float(column_data["tw"])
         column_T = float(column_data["T"])
         column_d = float(column_data["D"])
@@ -1902,11 +1900,6 @@ class Maincontroller(QMainWindow):
                                     L=float(column_data["D"]) - 2 * float(column_data["T"]),
                                     T=outputobj['ContPlateComp']['Thickness'])
 
-        # contPlate_L2 = StiffenerPlate(W=(float(column_data["B"]) - float(column_data["tw"])) / 2,
-        # 							  L=float(column_data["D"]) - 2 * float(column_data["T"]),
-        # 							  T=outputobj['ContPlateTens']['Thickness'])
-        # contPlate_R1 = copy.copy(contPlate_L1)
-        # contPlate_R2 = copy.copy(contPlate_L2)
 
         beam_stiffeners = StiffenerPlate(W=outputobj['Stiffener']['Height'], L=outputobj['Stiffener']['Length'],
                                          T=outputobj['Stiffener']['Thickness'], R11=outputobj['Stiffener']['NotchTop'],
@@ -1953,43 +1946,16 @@ class Maincontroller(QMainWindow):
         # bcWeld for stiffener hight on left side
         bcWeldStiffHeight = FilletWeld(b=float(alist["Weld"]["Web (mm)"]), h=float(alist["Weld"]["Web (mm)"]),
                                        L=outputobj['Stiffener']['Height'] - outputobj['Stiffener']['NotchBottom'])
-        # bcWeldStiffHL_2 = copy.copy(bcWeldStiffHL_1)
-        # bcWeldStiffHR_1 = copy.copy(bcWeldStiffHL_1)
-        # bcWeldStiffHR_2 = copy.copy(bcWeldStiffHL_1)
 
         bcWeldStiffLength = FilletWeld(b=float(alist["Weld"]["Web (mm)"]), h=float(alist["Weld"]["Web (mm)"]),
                                        L=outputobj['Stiffener']['Length'] - outputobj['Stiffener']['NotchBottom'])
-        # bcWeldStiffLL_2 = copy.copy(bcWeldStiffLL_1)
-        # bcWeldStiffLR_1 = copy.copy(bcWeldStiffLL_1)
-        # bcWeldStiffLR_2 = copy.copy(bcWeldStiffLL_1)
 
         contWeldD = FilletWeld(b=float(outputobj['ContPlateTens']['Weld']), h=float(outputobj['ContPlateTens']['Weld']),
                                L=float(column_data["D"]) - 2 * float(column_data["T"]))
-        # contWeldL2_U2 = FilletWeld(b=float(outputobj['ContPlateTens']['Weld']), h=float(outputobj['ContPlateTens']['Weld']),
-        # 						   L=float(column_data["D"]) - 2 * float(column_data["T"]))
-        # contWeldL1_L2 = copy.copy(contWeldL2_U2)
-        # contWeldL2_L2 = copy.copy(contWeldL2_U2)
-        # contWeldR1_U2 = copy.copy(contWeldL2_U2)
-        # contWeldR2_U2 = copy.copy(contWeldL2_U2)
-        # contWeldR1_L2 = copy.copy(contWeldL2_U2)
-        # contWeldR2_L2 = copy.copy(contWeldL2_U2)
+
         contWeldB = FilletWeld(b=float(outputobj['ContPlateTens']['Weld']), h=float(outputobj['ContPlateTens']['Weld']),
                                L=float(column_data["B"]) / 2 - float(column_data["tw"]) / 2)
-        # contWeldL1_L3 = copy.copy(contWeldL1_U3)
-        # contWeldL2_U3 = copy.copy(contWeldL1_U3)
-        # contWeldL2_L3 = copy.copy(contWeldL1_U3)
-        # contWeldR1_U3 = copy.copy(contWeldL1_U3)
-        # contWeldR1_L3 = copy.copy(contWeldL1_U3)
-        # contWeldR2_U3 = copy.copy(contWeldL1_U3)
-        # contWeldR2_L3 = copy.copy(contWeldL1_U3)
-        # contWeldL1_U1 = copy.copy(contWeldL1_U3)
-        # contWeldL1_L1 = copy.copy(contWeldL1_U3)
-        # contWeldL2_U1 = copy.copy(contWeldL1_U3)
-        # contWeldL2_L1 = copy.copy(contWeldL1_U3)
-        # contWeldR1_U1 = copy.copy(contWeldL1_U3)
-        # contWeldR1_L1 = copy.copy(contWeldL1_U3)
-        # contWeldR2_U1 = copy.copy(contWeldL1_U3)
-        # contWeldR2_L1 = copy.copy(contWeldL1_U3)
+
 
         if alist["Weld"]["Method"] == "Fillet Weld":
             # Followings welds are welds above beam flange, Qty = 4
@@ -2001,14 +1967,10 @@ class Maincontroller(QMainWindow):
             # Followings welds are welds below beam flange, Qty = 8
             bcWeldBelwFlang = FilletWeld(b=float(alist["Weld"]["Flange (mm)"]),
                                          h=float(alist["Weld"]["Flange (mm)"]), L=(beam_B - beam_tw) / 2)
-            # bcWeldBelwFlang_22 = copy.copy(bcWeldBelwFlang_21)
-            # bcWeldBelwFlang_23 = copy.copy(bcWeldBelwFlang_21)
-            # bcWeldBelwFlang_24 = copy.copy(bcWeldBelwFlang_21)
 
             # Followings welds are welds placed aside of beam web, Qty = 4 			# edited length value by Anand Swaroop
             bcWeldSideWeb = FilletWeld(b=float(alist["Weld"]["Web (mm)"]), h=float(alist["Weld"]["Web (mm)"]),
                                        L=beam_d - 2 * beam_T - 40)
-        # bcWeldSideWeb_22 = copy.copy(bcWeldSideWeb_21)
 
         else:
 
@@ -2024,23 +1986,6 @@ class Maincontroller(QMainWindow):
 
             if alist["Weld"]["Method"] == "Fillet Weld":
 
-                # # Followings welds are welds above beam flange, Qty = 4
-                # bcWeldAbvFlang = FilletWeld(b=float(alist["Weld"]["Flange (mm)"]),
-                # 							   h=float(alist["Weld"]["Flange (mm)"]),
-                # 							   L=beam_B)
-                # # bcWeldAbvFlang_22 = copy.copy(bcWeldAbvFlang_21)
-                #
-                # # Followings welds are welds below beam flange, Qty = 8
-                # bcWeldBelwFlang = FilletWeld(b=float(alist["Weld"]["Flange (mm)"]),
-                # 								h=float(alist["Weld"]["Flange (mm)"]), L=(beam_B - beam_tw) / 2)
-                # # bcWeldBelwFlang_22 = copy.copy(bcWeldBelwFlang_21)
-                # # bcWeldBelwFlang_23 = copy.copy(bcWeldBelwFlang_21)
-                # # bcWeldBelwFlang_24 = copy.copy(bcWeldBelwFlang_21)
-                #
-                # # Followings welds are welds placed aside of beam web, Qty = 4 			# edited length value by Anand Swaroop
-                # bcWeldSideWeb = FilletWeld(b=float(alist["Weld"]["Web (mm)"]), h=float(alist["Weld"]["Web (mm)"]),
-                # 							  L=beam_d - 2 * beam_T - 40)
-                # # bcWeldSideWeb_22 = copy.copy(bcWeldSideWeb_21)
 
                 extbothWays = CADFillet(beam_Left, beam_Right, plate_Right, bbNutBoltArray, bolt, bcWeldAbvFlang,
                                         bcWeldBelwFlang,
@@ -2064,23 +2009,6 @@ class Maincontroller(QMainWindow):
 
         else:  # conn_type = 'col_web_connectivity'
             if alist["Weld"]["Method"] == "Fillet Weld":
-                # # Followings welds are welds above beam flange, Qty = 4
-                # bcWeldAbvFlang_21 = FilletWeld(b=float(alist["Weld"]["Flange (mm)"]),
-                # 							   h=float(alist["Weld"]["Flange (mm)"]),
-                # 							   L=beam_B)
-                # bcWeldAbvFlang_22 = copy.copy(bcWeldAbvFlang_21)
-                #
-                # # Followings welds are welds below beam flange, Qty = 8
-                # bcWeldBelwFlang_21 = FilletWeld(b=float(alist["Weld"]["Flange (mm)"]),
-                # 								h=float(alist["Weld"]["Flange (mm)"]), L=(beam_B - beam_tw) / 2)
-                # bcWeldBelwFlang_22 = copy.copy(bcWeldBelwFlang_21)
-                # bcWeldBelwFlang_23 = copy.copy(bcWeldBelwFlang_21)
-                # bcWeldBelwFlang_24 = copy.copy(bcWeldBelwFlang_21)
-                #
-                # # Followings welds are welds placed aside of beam web, Qty = 4 			# edited length value by Anand Swaroop
-                # bcWeldSideWeb_21 = FilletWeld(b=float(alist["Weld"]["Web (mm)"]), h=float(alist["Weld"]["Web (mm)"]),
-                # 							  L=beam_d - 2 * beam_T - 40)
-                # bcWeldSideWeb_22 = copy.copy(bcWeldSideWeb_21)
 
                 col_web_connectivity = CADColWebFillet(beam_Left, beam_Right, plate_Right, bbNutBoltArray, bolt,
                                                        bcWeldAbvFlang,
@@ -2096,8 +2024,6 @@ class Maincontroller(QMainWindow):
                 return col_web_connectivity
 
             else:  # Groove Weld
-
-                # else:
 
                 #######################################
                 #       WELD SECTIONS QUARTER CONE    #
@@ -2233,14 +2159,14 @@ class Maincontroller(QMainWindow):
         # self.display.StartRotation(2000,0)
         self.display.FitAll()
         # self.display.Rotation(2000, 0)
-        alist = self.designParameters()
+        # alist = self.designParameters()
         outputobj = self.outputs
         numberOfBolts = int(outputobj["Bolt"]["NumberOfBolts"])
 
-        if alist['Member']['Connectivity'] == "Column web-Beam web":
-            conn_type = 'col_web_connectivity'
-        else:  # "Column flange-Beam web"
-            conn_type = 'col_flange_connectivity'
+        # if alist['Member']['Connectivity'] == "Column web-Beam web":
+        #     conn_type = 'col_web_connectivity'
+        # else:  # "Column flange-Beam web"
+        #     conn_type = 'col_flange_connectivity'
 
         self.display.DisableAntiAliasing()
         if bgcolor == "gradient_bg":
@@ -2252,7 +2178,7 @@ class Maincontroller(QMainWindow):
         # ExtObj is an object which gets all the calculated values of CAD models
         self.ExtObj = self.create_extended_both_ways()
 
-        # Displays the beams #TODO ANAND
+        # Displays the beams
         if component == "Column":
             self.display.View_Iso()
             osdag_display_shape(self.display, self.ExtObj.columnModel, update=True)
