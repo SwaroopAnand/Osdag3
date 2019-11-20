@@ -1836,7 +1836,7 @@ class Maincontroller(QMainWindow):
 	# 	'''
 	# 	Returns: The 3D model of extendedplate depending upon component selected
 	# 	'''
-	# 	self.ExtObj = self.create_extended_both_ways()
+	# 	self.ExtObj = self.create_cad()
 	# 	if self.component == "Column":
 	# 		final_model = self.ExtObj.get_column_models()
 	#
@@ -1944,7 +1944,7 @@ class Maincontroller(QMainWindow):
 	def clear_log_messages(self):
 		self.ui.textEdit.clear()
 	#
-	# def create_extended_both_ways(self):
+	# def create_cad(self):
 	#
 	# 	column_data = self.fetchColumnPara()
 	# 	beam_data = self.fetchBeamPara()
@@ -2352,7 +2352,7 @@ class Maincontroller(QMainWindow):
 	# 	# Call to calculate/create the Extended Both Way CAD model
 	# 	status = self.resultObj['Bolt']['status']
 	# 	if status is True:
-	# 		self.create_extended_both_ways()
+	# 		self.create_cad()
 	# 		self.ui.btn3D.setChecked(Qt.Checked)
 	# 		if self.ui.btn3D.isChecked():
 	# 			self.ui.chkBx_columnSec.setChecked(Qt.Unchecked)
@@ -2421,7 +2421,7 @@ class Maincontroller(QMainWindow):
 	# 		self.display.set_bg_gradient_color(255, 255, 255, 255, 255, 255)
 	#
 	# 	# ExtObj is an object which gets all the calculated values of CAD models
-	# 	self.ExtObj = self.create_extended_both_ways()
+	# 	self.ExtObj = self.create_cad()
 	#
 	# 	# Displays the beams #TODO ANAND
 	# 	if component == "Column":
