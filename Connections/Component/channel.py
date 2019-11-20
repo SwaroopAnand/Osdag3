@@ -9,8 +9,8 @@ from OCC.Core.BRepAlgoAPI import BRepAlgoAPI_Cut
 #from notch import Notch
 from Connections.Component.notch import Notch
 
-from OCC.Display.SimpleGui import init_display
-display, start_display, add_menu, add_function_to_menu = init_display()
+# from OCC.Display.SimpleGui import init_display
+# display, start_display, add_menu, add_function_to_menu = init_display()
 """
 
 
@@ -114,20 +114,20 @@ class Channel(object):
         return prism
 
 
-B = 20
-T = 2
-D = 40
-t = 1.5
-L = 100
-
-origin = numpy.array([0.,0.,0.])
-uDir = numpy.array([1.,0.,0.])
-shaftDir = numpy.array([0.,0.,1.])
-
-angle = Channel(B, T, D, t, 0, 0, L)
-angles = angle.place(origin, uDir, shaftDir)
-point = angle.compute_params()
-prism = angle.create_model()
-display.DisplayShape(prism, update=True)
-display.DisableAntiAliasing()
-start_display()
+# B = 20
+# T = 2
+# D = 40
+# t = 1.5
+# L = 100
+#
+# origin = numpy.array([0.,0.,0.])
+# uDir = numpy.array([1.,0.,0.])
+# shaftDir = numpy.array([0.,0.,1.])
+#
+# angle = Channel(B, T, D, t, 0, 0, L)
+# angles = angle.place(origin, uDir, shaftDir)
+# point = angle.compute_params()
+# prism = angle.create_model()
+# display.DisplayShape(prism, update=True)
+# display.DisableAntiAliasing()
+# start_display()
