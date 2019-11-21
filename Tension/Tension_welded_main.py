@@ -1769,7 +1769,7 @@ class Maincontroller(QMainWindow):
 
 
 
-	#TODO :  Add different sections later
+		#TODO :  Add different sections later
 
 	# 	if alist['Member']['Connectivity'] == "Column web-Beam web":
 	# 		conn_type = 'col_web_connectivity'
@@ -1815,7 +1815,7 @@ class Maincontroller(QMainWindow):
 		self.component = component
 
 		self.display.EraseAll()
-		# self.display.View_Iso()
+		self.display.View_Iso()
 		# self.display.StartRotation(2000,0)
 		self.display.FitAll()
 		# self.display.Rotation(2000, 0)
@@ -1831,10 +1831,8 @@ class Maincontroller(QMainWindow):
 	# 	# ExtObj is an object which gets all the calculated values of CAD models
 		self.ExtObj = self.create_cad()
 
-	# 	# Displays the beams #TODO ANAND
-	# 	if component == "Column":
-	# 		self.display.View_Iso()
-	# 		osdag_display_shape(self.display, self.ExtObj.get_beamLModel(), update=True)
+		self.display.View_Iso()
+		osdag_display_shape(self.display, self.ExtObj.get_models(), update=True)
 
 	# # =================================================================================
 	def open_about_osdag(self):
