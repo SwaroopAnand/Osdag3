@@ -67,14 +67,14 @@ class Channel(object):
 
     '''
 
-    def __init__(self, B, T, D, t, R1, R2, length):
+    def __init__(self, B, T, D, t, R1, R2, L):
         self.B = B
         self.T = T
         self.D = D
         self.t = t
         self.R1 = R1
         self.R2 = R2
-        self.length = length
+        self.L = L
         self.clearDist = 20
         self.sec_origin = numpy.array([0, 0, 0])
         self.uDir = numpy.array([1.0, 0, 0])
@@ -104,11 +104,10 @@ class Channel(object):
         # self.points = [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0]]
 
     def create_model(self):
-
         edges = makeEdgesFromPoints(self.points)
         wire = makeWireFromEdges(edges)
         aFace = makeFaceFromWire(wire)
-        extrudeDir = self.length * self.wDir  # extrudeDir is a numpy array
+        extrudeDir = self.L * self.wDir  # extrudeDir is a numpy array
         prism = makePrismFromFace(aFace, extrudeDir)
 
         return prism
