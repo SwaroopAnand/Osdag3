@@ -39,8 +39,7 @@ from Connections.Component.plate import Plate
 from Connections.Component.angle import Angle
 from Connections.Component.channel import Channel
 
-from .cadFile import CAD \
- \
+from .cadFile import CAD 
 from Connections.Component.quarterCone import QuarterCone
 from OCC.Core.Quantity import Quantity_NOC_SADDLEBROWN
 from OCC.Core import IGESControl, BRepTools
