@@ -394,6 +394,7 @@ def tension_welded_design(uiObj):
         I = min(Iyy, Izz)
         radius_gyration = (math.sqrt(I / (Member_Ag/100* 2))) * 10
 
+
     if conn == "Star Angles" and Member_type == "Angles":
         Member_Izz = float(dictmemberdata["Iz"])
         Member_Iyy = float(dictmemberdata["Iy"])
