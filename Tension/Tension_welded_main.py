@@ -6,8 +6,13 @@ from .svg_window import SvgWindow
 from ui_tutorial import Ui_Tutorial
 from ui_aboutosdag import Ui_AboutOsdag
 from ui_ask_question import Ui_AskQuestion
-from .Tension_calc import tension_welded_design
-from .drawing2D_tension_weld import Tension_drawing
+
+# from .Tension_calc import tension_welded_design
+from .drawing2D_tension_weld_old import Tension_drawing
+# import bc_endplate_calc as db_value
+# from ui_weld_details_1 import Ui_Weld_Details_1
+# from ui_weld_details_2 import Ui_Weld_Details_2
+
 from .reportGenerator import save_html
 from OCC.Display.backend import load_backend, get_qt_modules
 # from drawing_2D import ExtendedEndPlate
