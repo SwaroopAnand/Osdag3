@@ -11,6 +11,7 @@ from cad.items.nut import Nut
 from cad.items.plate import Plate
 from cad.items.ISection import ISection
 from cad.items.filletweld import FilletWeld
+from cad.items.groove_weld import GrooveWeld
 from cad.items.angle import Angle
 from cad.items.anchor_bolt import AnchorBolt_A, AnchorBolt_B, AnchorBolt_Endplate
 from cad.items.stiffener_plate import StiffenerPlate
@@ -696,11 +697,20 @@ class CommonDesignLogic(object):
         column = ISection(B=column_B, T=column_T, D=column_d, t=column_tw, R1=column_R1, R2=column_R2,
                           alpha=column_alpha, length=column_length, notchObj=None)
         baseplate = Plate(L=float(BP.bp_length_provided), W=float(BP.bp_width_provided), T=float(BP.plate_thk))
-        weldAbvFlang = FilletWeld(b=float(BP.weld_size_flange), h=float(BP.weld_size_flange), L=column.B)
-        weldBelwFlang = FilletWeld(b=float(BP.weld_size_flange), h=float(BP.weld_size_flange),
-                                   L=(column.B - column.t - 2 * (column.R1 + column.R2)) / 2)
-        weldSideWeb = FilletWeld(b=float(BP.weld_size_web), h=float(BP.weld_size_web),
-                                 L=column.D - 2 * (column.t + column.R1))
+
+        # weldType = 'Groove'  # 'Fillet'
+
+        if BP.weld_type != 'Butt Weld':
+            weldAbvFlang = FilletWeld(b=float(BP.weld_size_flange), h=float(BP.weld_size_flange), L=column.B)
+            weldBelwFlang = FilletWeld(b=float(BP.weld_size_flange), h=float(BP.weld_size_flange),
+                                       L=(column.B - column.t - 2 * (column.R1 + column.R2)) / 2)
+            weldSideWeb = FilletWeld(b=float(BP.weld_size_web), h=float(BP.weld_size_web),
+                                     L=column.D - 2 * (column.t + column.R1))
+
+        else:
+            weldAbvFlang = GrooveWeld(b=column.T, h=float(BP.weld_size_web), L=column.B)
+            weldBelwFlang = GrooveWeld(b=column.T, h=float(BP.weld_size_web), L=column.B)
+            weldSideWeb = GrooveWeld(b=column.t, h=float(BP.weld_size_web), L=column.D)
 
         gusset = StiffenerPlate(L=BP.gusset_plate_length, W=BP.gusset_plate_height, T=BP.gusset_plate_thick,
                                 L11=(BP.gusset_plate_length - (column.B + 100)) / 2, L12=BP.gusset_plate_height - 100,
