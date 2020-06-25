@@ -3,6 +3,40 @@ import numpy
 from cad.items.ModelUtils import *
 from OCC.Core.BRepAlgoAPI import BRepAlgoAPI_Cut, BRepAlgoAPI_Fuse
 
+'''
+     <------ W ------>
+  a1                   a2
+  |  +---------------X
+  |  |               |   X
+  t  |               |       X
+^ |  X               |           X
+|    | X             |               X
+|    |   X           |                   X
+|    |     X+--------X                       X
+|    |     +             X                       X
+|    |     |                 X                       X
+|    |     |                     X                       X
+|    |     |                         X                       X
+H    |     |                             X                       X
+|    |     |                                 X                       X
+|    |     |                                     X                       X a3 ^
+|    |     |                                         X                   |    |
+|    |     |                                             X               |    |
+|    |     |                                                 X           |    T
+|    |     |                                                     X       |    |
+|    |     |                                                         X   |    |
+v    |     |                                                             X    v  ^
+  b2 X     |                                                             |       |
+       X   |                                                             |       W
+         X |                                                             |       |
+           X-------------------------------------------------------------+ a4    V
+         b3
+
+
+      <----------------------------------- L ---------------------------->
+
+'''
+
 class Stiffener_flange(object):
     def __init__(self, H, L, T, t, W, to_left=True):
        
