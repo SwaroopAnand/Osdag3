@@ -1,23 +1,31 @@
 
 import numpy
 from cad.items.ModelUtils import *
+from OCC.Core.BRepAlgoAPI import BRepAlgoAPI_Cut
+#from notch import Notch
+from cad.items.notch import Notch
 
 
 class TISection(object):
    
 
-    def __init__(self, D, B, T, t, P, Q, H):
+    def __init__(self, B, T, D, t, R1, R2, d, b, alpha, length, notchObj):
         self.B = B
         self.T = T
         self.D = D
         self.t = t
-        self.d = P
-        self.b = Q
-        self.length = H
-        
+        self.R1 = R1
+        self.R2 = R2
+        self.d = d
+        self.b = b
+        self.alpha = alpha
+        self.length = length
+        self.clearDist = 20
+        self.notchObj = notchObj
         self.sec_origin = numpy.array([0, 0, 0])
         self.uDir = numpy.array([1.0, 0, 0])
         self.wDir = numpy.array([0.0, 0, 1.0])
+
         self.compute_params()
 
     def place(self, sec_origin, uDir, wDir):
@@ -55,6 +63,7 @@ class TISection(object):
                        self.b4, self.d4, self.d6,
                        self.a4]
         print(self.d4)
+        # self.points = [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0]]
 
     def create_model(self):
 
@@ -63,7 +72,18 @@ class TISection(object):
         aFace = makeFaceFromWire(wire)
         extrudeDir = self.length * self.wDir  # extrudeDir is a numpy array
         prism = makePrismFromFace(aFace, extrudeDir)
-                
+        
+        if self.notchObj is not None:
+            uDir = numpy.array([-1.0, 0.0, 0])
+            wDir = numpy.array([0.0, 1.0, 0.0])
+            shiftOri = self.D / 2.0 * self.vDir + self.notchObj.width / 2.0 * self.wDir + self.B / 2.0 * -self.uDir  # + self.notchObj.width* self.wDir + self.T/2.0 * -self.uDir
+            origin2 = self.sec_origin + shiftOri
+
+            self.notchObj.place(origin2, uDir, wDir)
+
+            notchModel = self.notchObj.create_model()
+            prism = BRepAlgoAPI_Cut(prism, notchModel).Shape()
+        
         return prism
 
 if __name__ == '__main__':
@@ -75,15 +95,21 @@ if __name__ == '__main__':
     T = 3
     D = 50
     t = 2
-    P = 8
-    Q = 4
-    H = 100
+    R1 = 5
+    R2 = 5
+    d = 4
+    b = 4
+    alpha = 1
+    length = 100
+    width = 10
+    hight = 10
+    notchObj = Notch(R1, hight, width, length)
     
     origin = numpy.array([0.,0.,0.])
     uDir = numpy.array([1.,0.,0.])
     shaftDir = numpy.array([0.,0.,1.])
 
-    TISec = TISection(D, B, T, t, P, Q, H)
+    TISec = TISection(B, T, D, t, R1, R2, d, b, alpha, length, notchObj)
     _place = TISec.place(origin, uDir, shaftDir)
     point = TISec.compute_params()
     prism = TISec.create_model()

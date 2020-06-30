@@ -5,7 +5,9 @@
 # Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!\
-
+from PyQt5.QtWidgets import QMessageBox, qApp, QScrollArea
+from PyQt5.QtGui import QDoubleValidator, QIntValidator, QPixmap, QPalette
+from PyQt5.QtCore import QFile, pyqtSignal, QTextStream, Qt, QIODevice,pyqtSlot
 from PyQt5 import QtCore, QtGui, QtWidgets
 from design_report import reportGenerator
 from PyQt5.QtWidgets import QMainWindow, QDialog, QFontDialog, QApplication, QFileDialog, QColorDialog
@@ -20,11 +22,8 @@ from PyQt5.QtWidgets import QMainWindow, QDialog, QFontDialog, QApplication, QFi
 from gui.ui_tutorial import Ui_Tutorial
 from gui.ui_aboutosdag import Ui_AboutOsdag
 from gui.ui_ask_question import Ui_AskQuestion
-from PyQt5.QtCore import QRegExp,QTimer, QThread, QFile, pyqtSignal, QTextStream, Qt, QIODevice, pyqtSlot
-from PyQt5.QtGui import QBrush, QImage, QColor, QDoubleValidator, QIntValidator, QPixmap, QPalette, QTextCharFormat, QTextCursor, QStandardItem
-from PyQt5.QtWidgets import *
 from design_type.connection.column_cover_plate import ColumnCoverPlate
-from PIL import Image
+from PyQt5.QtGui import QStandardItem
 import os
 import yaml
 import json
@@ -197,8 +196,8 @@ class Window(QMainWindow):
             QMessageBox.warning(self, 'Warning', 'No design created!')
             return
 
-        self.new_window = QtWidgets.QDialog(self)
-        self.new_ui = Ui_Dialog1(main.design_button_status,loggermsg=self.textEdit.toPlainText())
+        self.new_window = QtWidgets.QDialog()
+        self.new_ui = Ui_Dialog1(main.design_button_status)
         self.new_ui.setupUi(self.new_window, main)
         self.new_ui.btn_browse.clicked.connect(lambda: self.getLogoFilePath(self.new_window, self.new_ui.lbl_browse))
         self.new_ui.btn_saveProfile.clicked.connect(lambda: self.saveUserProfile(self.new_window))
@@ -312,7 +311,7 @@ class Window(QMainWindow):
         MainWindow.setObjectName("MainWindow")
 
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/newPrefix/images/Osdag.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/newPrefix/images/finwindow.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setIconSize(QtCore.QSize(20, 2))
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -581,7 +580,8 @@ class Window(QMainWindow):
                 if lable == 'Material':
                     combo.setCurrentIndex(1)
                     maxi_width_right = max(maxi_width_right, item_width)
-                combo.view().setMinimumWidth(item_width + 25)
+                else:
+                    combo.view().setMinimumWidth(item_width + 25)
 
             if type == TYPE_TEXTBOX:
                 r = QtWidgets.QLineEdit(self.dockWidgetContents)
@@ -685,6 +685,7 @@ class Window(QMainWindow):
         in_scroll.setWidget(in_scrollcontent)
 
         maxi_width = maxi_width_left + maxi_width_right
+        print(maxi_width)
         in_scrollcontent.setMinimumSize(maxi_width,in_scrollcontent.sizeHint().height())
         maxi_width += 82
         maxi_width = max(maxi_width, 350)    # In case there is no widget
@@ -767,7 +768,7 @@ class Window(QMainWindow):
                     self.on_change_connect(key_changed, updated_list, data, main)
 
         self.btn_Reset = QtWidgets.QPushButton(self.dockWidgetContents)
-        self.btn_Reset.setGeometry(QtCore.QRect((maxi_width/2)-110, 650, 100, 35))
+        self.btn_Reset.setGeometry(QtCore.QRect((maxi_width/2)-110, 650, 100, 30))
         font = QtGui.QFont()
         font.setPointSize(10)
         font.setBold(True)
@@ -777,7 +778,7 @@ class Window(QMainWindow):
         self.btn_Reset.setObjectName("btn_Reset")
 
         self.btn_Design = QtWidgets.QPushButton(self.dockWidgetContents)
-        self.btn_Design.setGeometry(QtCore.QRect((maxi_width/2)+10, 650, 100, 35))
+        self.btn_Design.setGeometry(QtCore.QRect((maxi_width/2)+10, 650, 100, 30))
         font = QtGui.QFont()
         font.setPointSize(10)
         font.setBold(True)
@@ -1477,8 +1478,6 @@ class Window(QMainWindow):
                 for values in val:
                     k2.addItem(values)
                     k2.setCurrentIndex(0)
-                if VALUES_WELD_TYPE[1] in val:
-                    k2.setCurrentText(VALUES_WELD_TYPE[1])
                 if k2_key in RED_LIST:
                     red_list_set = set(red_list_function())
                     current_list_set = set(val)
@@ -1492,9 +1491,6 @@ class Window(QMainWindow):
             elif typ == TYPE_CUSTOM_MATERIAL:
                 if val:
                     self.new_material_dialog()
-            elif typ == TYPE_CUSTOM_SECTION:
-                if val:
-                    self.import_custom_section()
 
             elif typ == TYPE_LABEL:
                 k2.setText(val)
@@ -1860,6 +1856,7 @@ class Window(QMainWindow):
     def common_function_for_save_and_design(self, main, data, trigger_type):
 
         # @author: Amir
+
         option_list = main.input_values(self)
         self.design_fn(option_list, data, main)
 
@@ -1936,7 +1933,6 @@ class Window(QMainWindow):
                                                   KEY_DISP_ENDPLATE, KEY_DISP_BASE_PLATE, KEY_DISP_SEATED_ANGLE,
                                                   KEY_DISP_TENSION_BOLTED, KEY_DISP_TENSION_WELDED,KEY_DISP_COLUMNCOVERPLATE,
                                                   KEY_DISP_COLUMNCOVERPLATEWELD, KEY_DISP_COLUMNENDPLATE]:
-
                 self.commLogicObj = CommonDesignLogic(self.display, self.folder, main.module, main.mainmodule)
                 status = main.design_status
                 module_class = self.return_class(main.module)
@@ -1952,15 +1948,6 @@ class Window(QMainWindow):
 
                 if file_extension == 'png':
                     self.display.ExportToImage(fName)
-                    im = Image.open('./ResourceFiles/images/3d.png')
-                    w,h=im.size
-                    if(w< 640 or h < 360):
-                        print('Re-taking Screenshot')
-                        self.resize(700,500)
-                        self.outputDock.hide()
-                        self.inputDock.hide()
-                        self.textEdit.hide()
-                        QTimer.singleShot(0, lambda:self.retakeScreenshot(fName))
 
             else:
                 self.display.EraseAll()
@@ -1968,16 +1955,6 @@ class Window(QMainWindow):
                     self.frame.findChild(QtWidgets.QCheckBox, chkbox[0]).setEnabled(False)
                 for action in self.menugraphics_component_list:
                     action.setEnabled(False)
-
-    def retakeScreenshot(self,fName):
-        Ww=self.frameGeometry().width()
-        Wh=self.frameGeometry().height()
-        self.display.FitAll()
-        self.display.ExportToImage(fName)
-        self.resize(Ww,Wh)
-        self.outputDock.show()
-        self.inputDock.show()
-        self.textEdit.show()
 
     def show_error_msg(self, error):
         QMessageBox.about(self,'information',error[0])  # show only first error message.
@@ -2082,7 +2059,7 @@ class Window(QMainWindow):
 
                         pmap = QPixmap(option[3])
                         #im.setScaledContents(1)
-                        im.setPixmap(pmap.scaled(250,250,QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation))
+                        im.setPixmap(pmap.scaled(170,340,QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation))
                         #im.setPixmap(pmap)
                         image_layout.addWidget(im)
                         j += 1
@@ -2139,19 +2116,6 @@ class Window(QMainWindow):
                     dialog.resize(350, 300)
                 #dialog.setFixedSize(dialog.size())
                 dialog.exec()
-    
-    def import_custom_section(self):
-        '''
-        Custom Section Importing
-        Fetches data from osm file and returns as a dictionary
-        '''
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Open Section Design",None, "InputFiles(*.osm)")
-        if(fileName==''):
-            return
-        with open(fileName,'r') as file:
-            parameters=eval(file.read())
-        SecProfile=self.dockWidgetContents.findChild(QtWidgets.QWidget, KEY_SEC_PROFILE).currentText()
-        return parameters
 
     def new_material_dialog(self):
         dialog = QtWidgets.QDialog(self)
@@ -2793,19 +2757,8 @@ class Window(QMainWindow):
 
     def set_dialog_size(self,dialog):
         def set_size():
-            screen_resolution=QtWidgets.QDesktopWidget().screenGeometry()
-            if(screen_resolution.width()<1025):
-                measure=screen_resolution.height()-120
-                dialog.resize(measure*45//39,measure)
-                
-            else:
-                dialog.resize(900,700)
-            mysize = dialog.geometry()
-            hpos = (screen_resolution.width() - mysize.width() ) / 2
-            vpos = (screen_resolution.height() - mysize.height() ) / 2
-            dialog.move(hpos, vpos)
-            # dialog.resize(900,900)
-            # self.OsdagSectionModeller.OCCFrame.setMinimumSize(490,350)
+            dialog.resize(900,900) 
+            self.OsdagSectionModeller.OCCFrame.setMinimumSize(490,350)  
             self.OsdagSectionModeller.OCCWindow.setFocus()
         return set_size
 

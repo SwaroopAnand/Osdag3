@@ -13,9 +13,9 @@ import sys
 import datetime
 import pylatex as pyl
 from pylatex.basic import TextColor
-
-from pylatex import Document, Section, Subsection, Tabular, Tabularx,MultiColumn, LongTable, LongTabularx, LongTabu, MultiRow, StandAloneGraphic
-from pylatex import Math, TikZ, Axis, Plot, Figure, Matrix, Alignat, TextColor
+from pylatex import Document, Section, Subsection, Tabular, Tabularx,MultiColumn, LongTable, LongTabularx, LongTabu,\
+    MultiRow, StandAloneGraphic
+from pylatex import Math, TikZ, Axis, Plot, Figure, Matrix, Alignat
 from pylatex.utils import italic
 #from pdflatex import PDFLaTeX
 import os
@@ -247,34 +247,22 @@ class CreateLatex(Document):
         doc.append(NewPage())
 
 
-        if does_design_exist:
+        if (not 'TRAVIS' in os.environ) and (does_design_exist):
             with doc.create(Section('3D View')):
-                with doc.create(Tabular('p{15.5cm}', row_height=1.2)) as table:
+                with doc.create(Figure(position='h!')) as view_3D:
                     view_3dimg_path = rel_path + Disp_3d_image
-                    table.add_row([StandAloneGraphic(image_options="height=6cm",filename=view_3dimg_path)])
-                # with doc.create(Figure(position='h!')) as view_3D:
-                #     view_3dimg_path = rel_path + Disp_3d_image
-                #     # view_3D.add_image(filename=view_3dimg_path, width=NoEscape(r'\linewidth'))
-                #
-                #     view_3D.add_image(filename=view_3dimg_path,width=NoEscape(r'\linewidth,height=6.5cm'))
-                #
-                #     view_3D.add_caption('3D View')
+                    # view_3D.add_image(filename=view_3dimg_path, width=NoEscape(r'\linewidth'))
+                    view_3D.add_image(filename=view_3dimg_path)
 
-        with doc.create(Section('Design Log')):
-            logger_msgs=reportsummary['logger_messages'].split('\n')
-            for msg in logger_msgs:
-                if('WARNING' in msg):
-                    colour='blue'
-                elif('INFO' in msg):
-                    colour='green'
-                elif('ERROR' in msg):
-                    colour='red'
-                doc.append(TextColor(colour,'\n'+msg))
+                    view_3D.add_caption('3D View')
         try:
             doc.generate_pdf(filename, compiler='pdflatex', clean_tex=False)
         except:
             pass
 
+
 def color_cell(cellcolor,celltext):
     string = NoEscape(r'\cellcolor{'+cellcolor+r'}{'+celltext+r'}')
     return string
+
+

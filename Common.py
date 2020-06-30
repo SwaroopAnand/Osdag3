@@ -5,9 +5,9 @@
 import operator
 import math
 from utils.common.other_standards import *
-import os
 
-PATH_TO_DATABASE = os.path.join(os.path.dirname(__file__), 'ResourceFiles', 'Database', 'Intg_osdag.sqlite')
+
+PATH_TO_DATABASE = "ResourceFiles/Database/Intg_osdag.sqlite"
 
 
 import sqlite3
@@ -310,7 +310,6 @@ TYPE_TAB_2 = "TYPE_TAB_2"
 TYPE_TAB_3 = "TYPE_TAB_3"
 TYPE_SECTION = 'Popup_Section'
 TYPE_CUSTOM_MATERIAL = 'New_Material_Popup'
-TYPE_CUSTOM_SECTION = 'New_Section_Popup'
 TYPE_ENABLE_DISABLE = 'Enable/Disable'
 TYPE_CHANGE_TAB_NAME = 'Change tab_name'
 TYPE_REMOVE_TAB = 'Remove tab'
@@ -498,14 +497,13 @@ VALUES_PRIBM = connectdb("Beams")
 ############################
 # Display Keys (Input Dock, Output Dock, Design preference, Design report)
 ############################
-KEY_DISP_SHEAR_YLD= 'Shear yielding Capacity (kN)'
-KEY_DISP_SHEAR_RUP = 'Shear Rupture Capacity (kN)'
-KEY_DISP_PLATE_BLK_SHEAR_SHEAR = 'Block Shear Capacity in Shear (kN)'
-KEY_DISP_PLATE_BLK_SHEAR_TENSION = 'Block Shear Capacity in Tension (kN)'
-KEY_DISP_SHEAR_CAPACITY = 'Shear Capacity (kN)'
-KEY_DISP_BEARING_LENGTH = 'Bearing Length'
-KEY_DISP_ALLOW_SHEAR = 'Allowable Shear Capacity (kN)'
-DISP_LOWSHEAR = 'Limited to low shear capacity'
+KEY_DISP_SHEAR_YLD= 'Shear yielding Capacity $(V_{dy})$ (kN)'
+KEY_DISP_SHEAR_RUP = 'Shear Rupture Capacity $(V_{dn})$ (kN)'
+KEY_DISP_PLATE_BLK_SHEAR_SHEAR = 'Block Shear Capacity in Shear $(V_{db})$ (kN)'
+KEY_DISP_PLATE_BLK_SHEAR_TENSION = 'Block Shear Capacity in Tension $(T_{db})$ (kN)'
+KEY_DISP_SHEAR_CAPACITY = 'Shear Capacity $(V_d)$ (kN)'
+
+
 KEY_DISP_BLK_SHEAR = 'Block Shear Capacity'
 KEY_DISP_MOM_DEMAND = 'Moment Demand'
 KEY_DISP_MOM_CAPACITY = 'Moment Capacity'
@@ -1312,7 +1310,7 @@ KEY_OUT_DISP_BOLT_TENSION_FORCE = 'Bolt Tension Force (kN)'
 KEY_OUT_BOLT_PRYING_FORCE = 'Bolt.PryingForce'
 KEY_OUT_DISP_BOLT_PRYING_FORCE = 'Bolt Prying Force (kN)'
 KEY_OUT_BOLT_TENSION_CAPACITY = 'Bolt.Tension'
-KEY_OUT_BOLT_TENSION_CAPACITY1 = 'Bolt Tension Capacity (kN)'
+KEY_OUT_BOLT_TENSION_CAPACITY1 = 'Bolt Tension Capacity'
 KEY_OUT_DISP_BOLT_TENSION_CAPACITY = 'Bolt Tension Capacity (kN)'
 KEY_OUT_BOLTS_REQUIRED = 'Bolt.Required'
 KEY_OUT_LONG_JOINT = 'Bolt Capacity post Long Joint (kN)'

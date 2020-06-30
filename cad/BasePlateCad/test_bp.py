@@ -14,8 +14,9 @@ from OCC.Core.BRepAlgoAPI import BRepAlgoAPI_Fuse
 
 class BasePlateCad(object):
     def __init__(self, BP, column, nut_bolt_array, bolthight, baseplate, weldAbvFlang, weldBelwFlang, weldSideWeb,
-                 concrete, gusset, stiffener, grout, gussetweld, weld_stiffeer_alongWeb_h, weld_stiffeer_alongWeb_gh, weld_stiffeer_alongWeb_v, stiffener_algflangeL,
-                 stiffener_algflangeR, stiffener_acrsWeb, weld_stiffener_algflng_v, weld_stiffener_algflng_h, weld_stiffener_algflag_gh, weld_stiffener_acrsWeb_v, weld_stiffener_acrsWeb_h, weld_stiffener_acrsWeb_gh):
+                 concrete, gusset, stiffener, grout, gussetweld, weld_stiffener_alongWeb_h, weld_stiffener_alongWeb_gh, weld_stiffener_alongWeb_v, stiffener_algflangeL,
+                 stiffener_algflangeR, stiffener_acrsWeb, weld_stiffener_algflng_v, weld_stiffener_algflng_h, weld_stiffener_algflag_gh, weld_stiffener_acrsWeb_v, weld_stiffener_acrsWeb_h, weld_stiffener_acrsWeb_gh,
+                 stiffener_insideflange, weld_stiffener_inflange):
 
         """
 
@@ -30,6 +31,7 @@ class BasePlateCad(object):
 
         self.numberOfBolts = 4
         self.Weld_type = "Groove" # "Fillet"  #
+        self.extraspace = 5 #for stiffener inside flange
 
         self.BP = BP
         self.column = column
@@ -44,9 +46,9 @@ class BasePlateCad(object):
         self.stiffener = stiffener
         self.grout = grout
         self.gussetweld = gussetweld
-        self.weld_stiffeer_alongWeb_h = weld_stiffeer_alongWeb_h
-        self.weld_stiffeer_alongWeb_gh = weld_stiffeer_alongWeb_gh
-        self.weld_stiffeer_alongWeb_v = weld_stiffeer_alongWeb_v
+        self.weld_stiffener_alongWeb_h = weld_stiffener_alongWeb_h
+        self.weld_stiffener_alongWeb_gh = weld_stiffener_alongWeb_gh
+        self.weld_stiffener_alongWeb_v = weld_stiffener_alongWeb_v
         self.stiffener_acrsWeb = stiffener_acrsWeb
         self.weld_stiffener_algflng_v = weld_stiffener_algflng_v
         self.weld_stiffener_algflng_h = weld_stiffener_algflng_h
@@ -54,9 +56,12 @@ class BasePlateCad(object):
         self.weld_stiffener_acrsWeb_v = weld_stiffener_acrsWeb_v
         self.weld_stiffener_acrsWeb_h = weld_stiffener_acrsWeb_h
         self.weld_stiffener_acrsWeb_gh = weld_stiffener_acrsWeb_gh
+        self.stiffener_insideflange = stiffener_insideflange
+        self.weld_stiffener_inflange = weld_stiffener_inflange
 
         self.stiffener_algflangeL1 = stiffener_algflangeL
         self.stiffener_algflangeR1 = stiffener_algflangeR
+
 
         self.stiffener_algflangeL2 = copy.deepcopy(stiffener_algflangeL)
         self.stiffener_algflangeR2 = copy.deepcopy(stiffener_algflangeR)
@@ -102,25 +107,25 @@ class BasePlateCad(object):
         self.gussetweld_1 = copy.deepcopy(self.gussetweld)
         self.gussetweld_2 = copy.deepcopy(self.gussetweld)
 
-        self.weld_stiffeer_alongWeb_h_11 = copy.deepcopy(self.weld_stiffeer_alongWeb_h)
-        self.weld_stiffeer_alongWeb_h_21 = copy.deepcopy(self.weld_stiffeer_alongWeb_h)
-        self.weld_stiffeer_alongWeb_h_12 = copy.deepcopy(self.weld_stiffeer_alongWeb_h)
-        self.weld_stiffeer_alongWeb_h_22 = copy.deepcopy(self.weld_stiffeer_alongWeb_h)
+        self.weld_stiffener_alongWeb_h_11 = copy.deepcopy(self.weld_stiffener_alongWeb_h)
+        self.weld_stiffener_alongWeb_h_21 = copy.deepcopy(self.weld_stiffener_alongWeb_h)
+        self.weld_stiffener_alongWeb_h_12 = copy.deepcopy(self.weld_stiffener_alongWeb_h)
+        self.weld_stiffener_alongWeb_h_22 = copy.deepcopy(self.weld_stiffener_alongWeb_h)
 
-        self.weld_stiffeer_alongWeb_h_31 = copy.deepcopy(self.weld_stiffeer_alongWeb_h)
-        self.weld_stiffeer_alongWeb_h_41 = copy.deepcopy(self.weld_stiffeer_alongWeb_h)
-        self.weld_stiffeer_alongWeb_h_32 = copy.deepcopy(self.weld_stiffeer_alongWeb_h)
-        self.weld_stiffeer_alongWeb_h_42 = copy.deepcopy(self.weld_stiffeer_alongWeb_h)
+        self.weld_stiffener_alongWeb_h_31 = copy.deepcopy(self.weld_stiffener_alongWeb_h)
+        self.weld_stiffener_alongWeb_h_41 = copy.deepcopy(self.weld_stiffener_alongWeb_h)
+        self.weld_stiffener_alongWeb_h_32 = copy.deepcopy(self.weld_stiffener_alongWeb_h)
+        self.weld_stiffener_alongWeb_h_42 = copy.deepcopy(self.weld_stiffener_alongWeb_h)
 
-        self.weld_stiffeer_alongWeb_gh1 = copy.deepcopy(self.weld_stiffeer_alongWeb_gh)
-        self.weld_stiffeer_alongWeb_gh2 = copy.deepcopy(self.weld_stiffeer_alongWeb_gh)
-        self.weld_stiffeer_alongWeb_gh3 = copy.deepcopy(self.weld_stiffeer_alongWeb_gh)
-        self.weld_stiffeer_alongWeb_gh4 = copy.deepcopy(self.weld_stiffeer_alongWeb_gh)
+        self.weld_stiffener_alongWeb_gh1 = copy.deepcopy(self.weld_stiffener_alongWeb_gh)
+        self.weld_stiffener_alongWeb_gh2 = copy.deepcopy(self.weld_stiffener_alongWeb_gh)
+        self.weld_stiffener_alongWeb_gh3 = copy.deepcopy(self.weld_stiffener_alongWeb_gh)
+        self.weld_stiffener_alongWeb_gh4 = copy.deepcopy(self.weld_stiffener_alongWeb_gh)
 
-        self.weld_stiffeer_alongWeb_v_1 = copy.deepcopy(self.weld_stiffeer_alongWeb_v)
-        self.weld_stiffeer_alongWeb_v_2 = copy.deepcopy(self.weld_stiffeer_alongWeb_v)
-        self.weld_stiffeer_alongWeb_v_3 = copy.deepcopy(self.weld_stiffeer_alongWeb_v)
-        self.weld_stiffeer_alongWeb_v_4 = copy.deepcopy(self.weld_stiffeer_alongWeb_v)
+        self.weld_stiffener_alongWeb_v_1 = copy.deepcopy(self.weld_stiffener_alongWeb_v)
+        self.weld_stiffener_alongWeb_v_2 = copy.deepcopy(self.weld_stiffener_alongWeb_v)
+        self.weld_stiffener_alongWeb_v_3 = copy.deepcopy(self.weld_stiffener_alongWeb_v)
+        self.weld_stiffener_alongWeb_v_4 = copy.deepcopy(self.weld_stiffener_alongWeb_v)
 
         self.weld_stiffener_algflng_v1 = copy.deepcopy(self.weld_stiffener_algflng_v)
         self.weld_stiffener_algflng_v2 = copy.deepcopy(self.weld_stiffener_algflng_v)
@@ -151,6 +156,22 @@ class BasePlateCad(object):
 
         self.weld_stiffener_acrsWeb_gh1 = copy.deepcopy(self.weld_stiffener_acrsWeb_gh)
         self.weld_stiffener_acrsWeb_gh2 = copy.deepcopy(self.weld_stiffener_acrsWeb_gh)
+
+        self.stiffener_insideflange1 = copy.deepcopy(self.stiffener_insideflange)
+        self.stiffener_insideflange2 = copy.deepcopy(self.stiffener_insideflange)
+        # self.stiffener_insideflange3 = copy.deepcopy(self.stiffener_insideflange)
+        # self.stiffener_insideflange4 = copy.deepcopy(self.stiffener_insideflange)
+
+        self.weld_stiffener_inflange11 = copy.deepcopy(self.weld_stiffener_inflange)
+        self.weld_stiffener_inflange12 = copy.deepcopy(self.weld_stiffener_inflange)
+        self.weld_stiffener_inflange21 = copy.deepcopy(self.weld_stiffener_inflange)
+        self.weld_stiffener_inflange22 = copy.deepcopy(self.weld_stiffener_inflange)
+        # self.weld_stiffener_inflange5 = copy.deepcopy(self.weld_stiffener_inflange)
+        # self.weld_stiffener_inflange6 = copy.deepcopy(self.weld_stiffener_inflange)
+        # self.weld_stiffener_inflange7 = copy.deepcopy(self.weld_stiffener_inflange)
+        # self.weld_stiffener_inflange8 = copy.deepcopy(self.weld_stiffener_inflange)
+
+
 
 
 
@@ -190,11 +211,11 @@ class BasePlateCad(object):
         #todo: remove this gusset connection later
         if self.numberOfBolts == 4:
             stiffener_gap = 0  # self.column.B * 0.4
-            y_axis = self.column.D / 2 + self.stiffener.L / 2 + self.weld_stiffeer_alongWeb_v.h
+            y_axis = self.column.D / 2 + self.stiffener.L / 2 + self.weld_stiffener_alongWeb_v.h
             if self.Weld_type == "Fillet":
-                z_axis = self.stiffener.W / 2  # + self.weld_stiffeer_alongWeb_h.h
+                z_axis = self.stiffener.W / 2  # + self.weld_stiffener_alongWeb_h.h
             else:
-                z_axis = self.stiffener.W / 2 + self.weld_stiffeer_alongWeb_gh1.h  # + self.weld_stiffeer_alongWeb_h.h
+                z_axis = self.stiffener.W / 2 + self.weld_stiffener_alongWeb_gh1.h  # + self.weld_stiffener_alongWeb_h.h
             stiffener1OriginL = numpy.array([self.stiffener.T / 2 + stiffener_gap, y_axis, z_axis])
             stiffener1L_uDir = numpy.array([0.0, -1.0, 0.0])
             stiffener1L_wDir = numpy.array([-1.0, 0.0, 0.0])
@@ -213,11 +234,11 @@ class BasePlateCad(object):
 
         if self.numberOfBolts == 6:
             stiffener_gap =  self.column.B * 0.4
-            y_axis = self.column.D / 2 + self.stiffener.L / 2 + self.weld_stiffeer_alongWeb_v.h
+            y_axis = self.column.D / 2 + self.stiffener.L / 2 + self.weld_stiffener_alongWeb_v.h
             if self.Weld_type == "Fillet":
-                z_axis = self.stiffener.W / 2  # + self.weld_stiffeer_alongWeb_h.h
+                z_axis = self.stiffener.W / 2  # + self.weld_stiffener_alongWeb_h.h
             else:
-                z_axis = self.stiffener.W / 2 + self.weld_stiffeer_alongWeb_gh1.h  # + self.weld_stiffeer_alongWeb_h.h
+                z_axis = self.stiffener.W / 2 + self.weld_stiffener_alongWeb_gh1.h  # + self.weld_stiffener_alongWeb_h.h
             stiffener1OriginL = numpy.array([self.stiffener.T / 2 + stiffener_gap, y_axis, z_axis])
             stiffener1L_uDir = numpy.array([0.0, -1.0, 0.0])
             stiffener1L_wDir = numpy.array([-1.0, 0.0, 0.0])
@@ -272,7 +293,7 @@ class BasePlateCad(object):
         x_axis = self.column.B/2 + 10       #todo: add web length here
         y_axis = self.column.D / 2
         if self.Weld_type == "Fillet":
-            z_axis = 0 # self.stiffener_algflangeL1.H / 2 + self.weld_stiffeer_alongWeb_h.h
+            z_axis = 0 # self.stiffener_algflangeL1.H / 2 + self.weld_stiffener_alongWeb_h.h
         else:
             z_axis = self.weld_stiffener_algflag_gh.h
         stiffener_algflangeL1OriginL = numpy.array([x_axis, y_axis - self.stiffener_algflangeL1.T, z_axis])
@@ -310,7 +331,7 @@ class BasePlateCad(object):
         x_axis = self.column.t/2 + self.stiffener_acrsWeb.L/2 + 10  #todo: add weld ht here
         y_axis = self.stiffener_acrsWeb.T/2
         if self.Weld_type == "Fillet":
-            z_axis = self.stiffener.W / 2 #+ self.weld_stiffeer_alongWeb_h.h
+            z_axis = self.stiffener.W / 2 #+ self.weld_stiffener_alongWeb_h.h
         else:
             z_axis = self.stiffener.W / 2 + self.weld_stiffener_acrsWeb_gh.h
         stiffener_acrsWeb1OriginL = numpy.array([-x_axis, y_axis, z_axis])
@@ -326,6 +347,27 @@ class BasePlateCad(object):
         self.stiffener_acrsWeb2.place(stiffener_acrsWeb2OriginL, stiffener_acrsWeb2L_uDir, stiffener_acrsWeb2L_wDir)
 
         self.stiffener_acrsWeb2Model = self.stiffener_acrsWeb2.create_model()
+
+        #todo: add if stiffener_inside_flange == true:
+        # if stiffener_acrs_web == true:
+
+        x_axis = self.stiffener_insideflange.W/2 + self.column.t/2 + self.column.R1 + self.extraspace
+        y_axis = 0.0        #self.stiffener_acrsWeb.T/2 + self.stiffener_insideflange.L/2 + self.weld_stiffener_inflange.h
+        z_axis = self.stiffener_acrsWeb.W + self.stiffener_insideflange.T/2
+
+        stiffener_insideflange1OriginL = numpy.array([x_axis, y_axis, z_axis])
+        stiffener_insideflange1L_uDir = numpy.array([0.0, 1.0, 0.0])
+        stiffener_insideflange1L_wDir = numpy.array([0.0, 0.0, 1.0])
+        self.stiffener_insideflange1.place(stiffener_insideflange1OriginL, stiffener_insideflange1L_uDir, stiffener_insideflange1L_wDir)
+
+        self.stiffener_insideflange1Model = self.stiffener_insideflange1.create_model()
+
+        stiffener_insideflange2OriginL = numpy.array([-x_axis, y_axis, z_axis])
+        stiffener_insideflange2L_uDir = numpy.array([0.0, 1.0, 0.0])
+        stiffener_insideflange2L_wDir = numpy.array([0.0, 0.0, 1.0])
+        self.stiffener_insideflange2.place(stiffener_insideflange2OriginL, stiffener_insideflange2L_uDir, stiffener_insideflange2L_wDir)
+
+        self.stiffener_insideflange2Model = self.stiffener_insideflange2.create_model()
 
 
     def createWeldGeometry(self):
@@ -429,228 +471,228 @@ class BasePlateCad(object):
         # self.gussetweld_2Model = self.gussetweld_2.create_model()
 
 
-        # z_axis = self.stiffener.W / 2 + self.weld_stiffeer_alongWeb_h.h
+        # z_axis = self.stiffener.W / 2 + self.weld_stiffener_alongWeb_h.h
         #todo: removing horizontal welds for stiffenerws
         if self.numberOfBolts == 4:
             if self.Weld_type == "Fillet":
                 x_axis =  self.stiffener.T/2
-                y_axis = self.column.D / 2 + self.stiffener.L + self.weld_stiffeer_alongWeb_v.h
+                y_axis = self.column.D / 2 + self.stiffener.L + self.weld_stiffener_alongWeb_v.h
                 z_axis = 0.0
                 stiffenerweldOrigin_h_11 = numpy.array([-x_axis, y_axis, z_axis])
                 uDirAbv_11 = numpy.array([0.0, 0.0, 1.0])
                 wDirAbv_11 = numpy.array([0.0, -1.0, 0])
-                self.weld_stiffeer_alongWeb_h_11.place(stiffenerweldOrigin_h_11, uDirAbv_11, wDirAbv_11)
+                self.weld_stiffener_alongWeb_h_11.place(stiffenerweldOrigin_h_11, uDirAbv_11, wDirAbv_11)
 
-                self.weld_stiffeer_alongWeb_h_11Model = self.weld_stiffeer_alongWeb_h_11.create_model()
+                self.weld_stiffener_alongWeb_h_11Model = self.weld_stiffener_alongWeb_h_11.create_model()
 
-                stiffenerweldOrigin_h_21 = numpy.array([-x_axis, -y_axis + self.weld_stiffeer_alongWeb_h_21.L, z_axis])
+                stiffenerweldOrigin_h_21 = numpy.array([-x_axis, -y_axis + self.weld_stiffener_alongWeb_h_21.L, z_axis])
                 uDirAbv_11 = numpy.array([0.0, 0.0, 1.0])
                 wDirAbv_11 = numpy.array([0.0, -1.0, 0])
-                self.weld_stiffeer_alongWeb_h_21.place(stiffenerweldOrigin_h_21, uDirAbv_11, wDirAbv_11)
+                self.weld_stiffener_alongWeb_h_21.place(stiffenerweldOrigin_h_21, uDirAbv_11, wDirAbv_11)
 
-                self.weld_stiffeer_alongWeb_h_21Model = self.weld_stiffeer_alongWeb_h_21.create_model()
+                self.weld_stiffener_alongWeb_h_21Model = self.weld_stiffener_alongWeb_h_21.create_model()
 
-                stiffenerweldOrigin_h_12 = numpy.array([ x_axis, y_axis - self.weld_stiffeer_alongWeb_h_21.L, z_axis])
+                stiffenerweldOrigin_h_12 = numpy.array([ x_axis, y_axis - self.weld_stiffener_alongWeb_h_21.L, z_axis])
                 uDirAbv_11 = numpy.array([0.0, 0.0, 1.0])
                 wDirAbv_11 = numpy.array([0.0, 1.0, 0])
-                self.weld_stiffeer_alongWeb_h_12.place(stiffenerweldOrigin_h_12, uDirAbv_11, wDirAbv_11)
+                self.weld_stiffener_alongWeb_h_12.place(stiffenerweldOrigin_h_12, uDirAbv_11, wDirAbv_11)
 
-                self.weld_stiffeer_alongWeb_h_12Model = self.weld_stiffeer_alongWeb_h_12.create_model()
+                self.weld_stiffener_alongWeb_h_12Model = self.weld_stiffener_alongWeb_h_12.create_model()
 
                 stiffenerweldOrigin_h_22 = numpy.array([ x_axis, -y_axis, z_axis])
                 uDirAbv_11 = numpy.array([0.0, 0.0, 1.0])
                 wDirAbv_11 = numpy.array([0.0, 1.0, 0])
-                self.weld_stiffeer_alongWeb_h_22.place(stiffenerweldOrigin_h_22, uDirAbv_11, wDirAbv_11)
+                self.weld_stiffener_alongWeb_h_22.place(stiffenerweldOrigin_h_22, uDirAbv_11, wDirAbv_11)
 
-                self.weld_stiffeer_alongWeb_h_22Model = self.weld_stiffeer_alongWeb_h_22.create_model()
+                self.weld_stiffener_alongWeb_h_22Model = self.weld_stiffener_alongWeb_h_22.create_model()
 
             else:
                 stiffener_gap = 0.0
                 x_axis = 0.0
-                y_axis = self.column.D / 2 + self.stiffener.L + self.weld_stiffeer_alongWeb_v.h
-                z_axis = weld_stiffeer_alongWeb_gh.h/2
+                y_axis = self.column.D / 2 + self.stiffener.L + self.weld_stiffener_alongWeb_v.h
+                z_axis = weld_stiffener_alongWeb_gh.h/2
 
                 stiffenerweldOrigin_h_11 = numpy.array([-x_axis + stiffener_gap, y_axis, z_axis])
                 uDirAbv_11 = numpy.array([1.0, 0.0, 0.0])
                 wDirAbv_11 = numpy.array([0.0, -1.0, 0])
-                self.weld_stiffeer_alongWeb_gh1.place(stiffenerweldOrigin_h_11, uDirAbv_11, wDirAbv_11)
+                self.weld_stiffener_alongWeb_gh1.place(stiffenerweldOrigin_h_11, uDirAbv_11, wDirAbv_11)
 
-                self.weld_stiffeer_alongWeb_gh1Model = self.weld_stiffeer_alongWeb_gh1.create_model()
+                self.weld_stiffener_alongWeb_gh1Model = self.weld_stiffener_alongWeb_gh1.create_model()
 
                 stiffenerweldOrigin_h_21 = numpy.array(
-                    [-x_axis + stiffener_gap, -y_axis + self.weld_stiffeer_alongWeb_gh2.L, z_axis])
+                    [-x_axis + stiffener_gap, -y_axis + self.weld_stiffener_alongWeb_gh2.L, z_axis])
                 uDirAbv_11 = numpy.array([1.0, 0.0, 0.0])
                 wDirAbv_11 = numpy.array([0.0, -1.0, 0])
-                self.weld_stiffeer_alongWeb_gh2.place(stiffenerweldOrigin_h_21, uDirAbv_11, wDirAbv_11)
+                self.weld_stiffener_alongWeb_gh2.place(stiffenerweldOrigin_h_21, uDirAbv_11, wDirAbv_11)
 
-                self.weld_stiffeer_alongWeb_gh2Model = self.weld_stiffeer_alongWeb_gh2.create_model()
+                self.weld_stiffener_alongWeb_gh2Model = self.weld_stiffener_alongWeb_gh2.create_model()
 
 
             x_axis = self.stiffener.T / 2
-            y_axis = self.column.D / 2 + self.stiffener.L + self.weld_stiffeer_alongWeb_v.h
+            y_axis = self.column.D / 2 + self.stiffener.L + self.weld_stiffener_alongWeb_v.h
             if self.Weld_type == "Fillet":
                 z_axis = self.stiffener.R22
             else:
-                z_axis =  self.stiffener.R22 + self.weld_stiffeer_alongWeb_gh.h
-            stiffenerweldOrigin_v_1 = numpy.array([ 0.0, y_axis - self.stiffener.L - self.weld_stiffeer_alongWeb_v.h/2, z_axis])
+                z_axis =  self.stiffener.R22 + self.weld_stiffener_alongWeb_gh.h
+            stiffenerweldOrigin_v_1 = numpy.array([ 0.0, y_axis - self.stiffener.L - self.weld_stiffener_alongWeb_v.h/2, z_axis])
             uDirAbv_11 = numpy.array([1.0, 0.0, 0.0])
             wDirAbv_11 = numpy.array([0.0, 0, 1.0])
-            self.weld_stiffeer_alongWeb_v_1.place(stiffenerweldOrigin_v_1, uDirAbv_11, wDirAbv_11)
+            self.weld_stiffener_alongWeb_v_1.place(stiffenerweldOrigin_v_1, uDirAbv_11, wDirAbv_11)
 
-            self.weld_stiffeer_alongWeb_v_1Model = self.weld_stiffeer_alongWeb_v_1.create_model()
+            self.weld_stiffener_alongWeb_v_1Model = self.weld_stiffener_alongWeb_v_1.create_model()
 
-            stiffenerweldOrigin_v_2 = numpy.array([ 0.0, -y_axis + self.stiffener.L + self.weld_stiffeer_alongWeb_v.h/2, z_axis])
+            stiffenerweldOrigin_v_2 = numpy.array([ 0.0, -y_axis + self.stiffener.L + self.weld_stiffener_alongWeb_v.h/2, z_axis])
             uDirAbv_11 = numpy.array([1.0, 0.0, 0.0])
             wDirAbv_11 = numpy.array([0.0, 0.0, 1.0])
-            self.weld_stiffeer_alongWeb_v_2.place(stiffenerweldOrigin_v_2, uDirAbv_11, wDirAbv_11)
+            self.weld_stiffener_alongWeb_v_2.place(stiffenerweldOrigin_v_2, uDirAbv_11, wDirAbv_11)
 
-            self.weld_stiffeer_alongWeb_v_2Model = self.weld_stiffeer_alongWeb_v_2.create_model()
+            self.weld_stiffener_alongWeb_v_2Model = self.weld_stiffener_alongWeb_v_2.create_model()
 
         if self.numberOfBolts == 6:
             if self.Weld_type == "Fillet":
                 stiffener_gap = self.column.B * 0.4
                 x_axis = self.stiffener.T / 2
-                y_axis = self.column.D / 2 + self.stiffener.L + self.weld_stiffeer_alongWeb_v.h
+                y_axis = self.column.D / 2 + self.stiffener.L + self.weld_stiffener_alongWeb_v.h
                 z_axis = 0.0
 
                 stiffenerweldOrigin_h_11 = numpy.array([-x_axis + stiffener_gap, y_axis, z_axis])
                 uDirAbv_11 = numpy.array([0.0, 0.0, 1.0])
                 wDirAbv_11 = numpy.array([0.0, -1.0, 0])
-                self.weld_stiffeer_alongWeb_h_11.place(stiffenerweldOrigin_h_11, uDirAbv_11, wDirAbv_11)
+                self.weld_stiffener_alongWeb_h_11.place(stiffenerweldOrigin_h_11, uDirAbv_11, wDirAbv_11)
 
-                self.weld_stiffeer_alongWeb_h_11Model = self.weld_stiffeer_alongWeb_h_11.create_model()
+                self.weld_stiffener_alongWeb_h_11Model = self.weld_stiffener_alongWeb_h_11.create_model()
 
-                stiffenerweldOrigin_h_21 = numpy.array([-x_axis + stiffener_gap, -y_axis + self.weld_stiffeer_alongWeb_h_21.L, z_axis])
+                stiffenerweldOrigin_h_21 = numpy.array([-x_axis + stiffener_gap, -y_axis + self.weld_stiffener_alongWeb_h_21.L, z_axis])
                 uDirAbv_11 = numpy.array([0.0, 0.0, 1.0])
                 wDirAbv_11 = numpy.array([0.0, -1.0, 0])
-                self.weld_stiffeer_alongWeb_h_21.place(stiffenerweldOrigin_h_21, uDirAbv_11, wDirAbv_11)
+                self.weld_stiffener_alongWeb_h_21.place(stiffenerweldOrigin_h_21, uDirAbv_11, wDirAbv_11)
 
-                self.weld_stiffeer_alongWeb_h_21Model = self.weld_stiffeer_alongWeb_h_21.create_model()
+                self.weld_stiffener_alongWeb_h_21Model = self.weld_stiffener_alongWeb_h_21.create_model()
 
-                stiffenerweldOrigin_h_12 = numpy.array([x_axis + stiffener_gap, y_axis - self.weld_stiffeer_alongWeb_h_21.L, z_axis])
+                stiffenerweldOrigin_h_12 = numpy.array([x_axis + stiffener_gap, y_axis - self.weld_stiffener_alongWeb_h_21.L, z_axis])
                 uDirAbv_11 = numpy.array([0.0, 0.0, 1.0])
                 wDirAbv_11 = numpy.array([0.0, 1.0, 0])
-                self.weld_stiffeer_alongWeb_h_12.place(stiffenerweldOrigin_h_12, uDirAbv_11, wDirAbv_11)
+                self.weld_stiffener_alongWeb_h_12.place(stiffenerweldOrigin_h_12, uDirAbv_11, wDirAbv_11)
 
-                self.weld_stiffeer_alongWeb_h_12Model = self.weld_stiffeer_alongWeb_h_12.create_model()
+                self.weld_stiffener_alongWeb_h_12Model = self.weld_stiffener_alongWeb_h_12.create_model()
 
                 stiffenerweldOrigin_h_22 = numpy.array([x_axis + stiffener_gap, -y_axis, z_axis])
                 uDirAbv_11 = numpy.array([0.0, 0.0, 1.0])
                 wDirAbv_11 = numpy.array([0.0, 1.0, 0])
-                self.weld_stiffeer_alongWeb_h_22.place(stiffenerweldOrigin_h_22, uDirAbv_11, wDirAbv_11)
+                self.weld_stiffener_alongWeb_h_22.place(stiffenerweldOrigin_h_22, uDirAbv_11, wDirAbv_11)
 
-                self.weld_stiffeer_alongWeb_h_22Model = self.weld_stiffeer_alongWeb_h_22.create_model()
+                self.weld_stiffener_alongWeb_h_22Model = self.weld_stiffener_alongWeb_h_22.create_model()
 
                 stiffenerweldOrigin_h_31 = numpy.array([-x_axis - stiffener_gap, y_axis, z_axis])
                 uDirAbv_11 = numpy.array([0.0, 0.0, 1.0])
                 wDirAbv_11 = numpy.array([0.0, -1.0, 0])
-                self.weld_stiffeer_alongWeb_h_31.place(stiffenerweldOrigin_h_31, uDirAbv_11, wDirAbv_11)
+                self.weld_stiffener_alongWeb_h_31.place(stiffenerweldOrigin_h_31, uDirAbv_11, wDirAbv_11)
 
-                self.weld_stiffeer_alongWeb_h_31Model = self.weld_stiffeer_alongWeb_h_31.create_model()
+                self.weld_stiffener_alongWeb_h_31Model = self.weld_stiffener_alongWeb_h_31.create_model()
 
-                stiffenerweldOrigin_h_41 = numpy.array([-x_axis - stiffener_gap, -y_axis + self.weld_stiffeer_alongWeb_h_41.L, z_axis])
+                stiffenerweldOrigin_h_41 = numpy.array([-x_axis - stiffener_gap, -y_axis + self.weld_stiffener_alongWeb_h_41.L, z_axis])
                 uDirAbv_11 = numpy.array([0.0, 0.0, 1.0])
                 wDirAbv_11 = numpy.array([0.0, -1.0, 0])
-                self.weld_stiffeer_alongWeb_h_41.place(stiffenerweldOrigin_h_41, uDirAbv_11, wDirAbv_11)
+                self.weld_stiffener_alongWeb_h_41.place(stiffenerweldOrigin_h_41, uDirAbv_11, wDirAbv_11)
 
-                self.weld_stiffeer_alongWeb_h_41Model = self.weld_stiffeer_alongWeb_h_41.create_model()
+                self.weld_stiffener_alongWeb_h_41Model = self.weld_stiffener_alongWeb_h_41.create_model()
 
-                stiffenerweldOrigin_h_32 = numpy.array([x_axis - stiffener_gap, y_axis - self.weld_stiffeer_alongWeb_h_21.L, z_axis])
+                stiffenerweldOrigin_h_32 = numpy.array([x_axis - stiffener_gap, y_axis - self.weld_stiffener_alongWeb_h_21.L, z_axis])
                 uDirAbv_11 = numpy.array([0.0, 0.0, 1.0])
                 wDirAbv_11 = numpy.array([0.0, 1.0, 0])
-                self.weld_stiffeer_alongWeb_h_32.place(stiffenerweldOrigin_h_32, uDirAbv_11, wDirAbv_11)
+                self.weld_stiffener_alongWeb_h_32.place(stiffenerweldOrigin_h_32, uDirAbv_11, wDirAbv_11)
 
-                self.weld_stiffeer_alongWeb_h_32Model = self.weld_stiffeer_alongWeb_h_32.create_model()
+                self.weld_stiffener_alongWeb_h_32Model = self.weld_stiffener_alongWeb_h_32.create_model()
 
                 stiffenerweldOrigin_h_42 = numpy.array([x_axis - stiffener_gap, -y_axis, z_axis])
                 uDirAbv_11 = numpy.array([0.0, 0.0, 1.0])
                 wDirAbv_11 = numpy.array([0.0, 1.0, 0])
-                self.weld_stiffeer_alongWeb_h_42.place(stiffenerweldOrigin_h_42, uDirAbv_11, wDirAbv_11)
+                self.weld_stiffener_alongWeb_h_42.place(stiffenerweldOrigin_h_42, uDirAbv_11, wDirAbv_11)
 
-                self.weld_stiffeer_alongWeb_h_42Model = self.weld_stiffeer_alongWeb_h_42.create_model()
+                self.weld_stiffener_alongWeb_h_42Model = self.weld_stiffener_alongWeb_h_42.create_model()
 
             else:
                 stiffener_gap = self.column.B * 0.4
                 x_axis = 0.0
-                y_axis = self.column.D / 2 + self.stiffener.L + self.weld_stiffeer_alongWeb_v.h
-                z_axis = weld_stiffeer_alongWeb_gh.h/2
+                y_axis = self.column.D / 2 + self.stiffener.L + self.weld_stiffener_alongWeb_v.h
+                z_axis = weld_stiffener_alongWeb_gh.h/2
 
                 stiffenerweldOrigin_h_11 = numpy.array([-x_axis + stiffener_gap, y_axis, z_axis])
                 uDirAbv_11 = numpy.array([1.0, 0.0, 0.0])
                 wDirAbv_11 = numpy.array([0.0, -1.0, 0])
-                self.weld_stiffeer_alongWeb_gh1.place(stiffenerweldOrigin_h_11, uDirAbv_11, wDirAbv_11)
+                self.weld_stiffener_alongWeb_gh1.place(stiffenerweldOrigin_h_11, uDirAbv_11, wDirAbv_11)
 
-                self.weld_stiffeer_alongWeb_gh1Model = self.weld_stiffeer_alongWeb_gh1.create_model()
+                self.weld_stiffener_alongWeb_gh1Model = self.weld_stiffener_alongWeb_gh1.create_model()
 
                 stiffenerweldOrigin_h_21 = numpy.array(
-                    [-x_axis + stiffener_gap, -y_axis + self.weld_stiffeer_alongWeb_gh2.L, z_axis])
+                    [-x_axis + stiffener_gap, -y_axis + self.weld_stiffener_alongWeb_gh2.L, z_axis])
                 uDirAbv_11 = numpy.array([1.0, 0.0, 0.0])
                 wDirAbv_11 = numpy.array([0.0, -1.0, 0])
-                self.weld_stiffeer_alongWeb_gh2.place(stiffenerweldOrigin_h_21, uDirAbv_11, wDirAbv_11)
+                self.weld_stiffener_alongWeb_gh2.place(stiffenerweldOrigin_h_21, uDirAbv_11, wDirAbv_11)
 
-                self.weld_stiffeer_alongWeb_gh2Model = self.weld_stiffeer_alongWeb_gh2.create_model()
+                self.weld_stiffener_alongWeb_gh2Model = self.weld_stiffener_alongWeb_gh2.create_model()
 
                 stiffenerweldOrigin_h_31 = numpy.array([-x_axis - stiffener_gap, y_axis, z_axis])
                 uDirAbv_11 = numpy.array([1.0, 0.0, 0.0])
                 wDirAbv_11 = numpy.array([0.0, -1.0, 0])
-                self.weld_stiffeer_alongWeb_gh3.place(stiffenerweldOrigin_h_31, uDirAbv_11, wDirAbv_11)
+                self.weld_stiffener_alongWeb_gh3.place(stiffenerweldOrigin_h_31, uDirAbv_11, wDirAbv_11)
 
-                self.weld_stiffeer_alongWeb_gh3Model = self.weld_stiffeer_alongWeb_gh3.create_model()
+                self.weld_stiffener_alongWeb_gh3Model = self.weld_stiffener_alongWeb_gh3.create_model()
 
                 stiffenerweldOrigin_h_41 = numpy.array(
-                    [-x_axis - stiffener_gap, -y_axis + self.weld_stiffeer_alongWeb_gh4.L, z_axis])
+                    [-x_axis - stiffener_gap, -y_axis + self.weld_stiffener_alongWeb_gh4.L, z_axis])
                 uDirAbv_11 = numpy.array([1.0, 0.0, 0.0])
                 wDirAbv_11 = numpy.array([0.0, -1.0, 0])
-                self.weld_stiffeer_alongWeb_gh4.place(stiffenerweldOrigin_h_41, uDirAbv_11, wDirAbv_11)
+                self.weld_stiffener_alongWeb_gh4.place(stiffenerweldOrigin_h_41, uDirAbv_11, wDirAbv_11)
 
-                self.weld_stiffeer_alongWeb_gh4Model = self.weld_stiffeer_alongWeb_gh4.create_model()
+                self.weld_stiffener_alongWeb_gh4Model = self.weld_stiffener_alongWeb_gh4.create_model()
 
             stiffener_gap = self.column.B * 0.4
             x_axis = self.stiffener.T / 2
-            y_axis = self.column.D / 2 + self.stiffener.L + self.weld_stiffeer_alongWeb_v.h
+            y_axis = self.column.D / 2 + self.stiffener.L + self.weld_stiffener_alongWeb_v.h
             if self.Weld_type == "Fillet":
                 z_axis = self.stiffener.R22
             else:
-                z_axis =  self.stiffener.R22 + self.weld_stiffeer_alongWeb_gh.h
+                z_axis =  self.stiffener.R22 + self.weld_stiffener_alongWeb_gh.h
             stiffenerweldOrigin_v_1 = numpy.array(
-                [stiffener_gap, y_axis - self.stiffener.L - self.weld_stiffeer_alongWeb_v.h / 2, z_axis])
+                [stiffener_gap, y_axis - self.stiffener.L - self.weld_stiffener_alongWeb_v.h / 2, z_axis])
             uDirAbv_11 = numpy.array([1.0, 0.0, 0.0])
             wDirAbv_11 = numpy.array([0.0, 0, 1.0])
-            self.weld_stiffeer_alongWeb_v_1.place(stiffenerweldOrigin_v_1, uDirAbv_11, wDirAbv_11)
+            self.weld_stiffener_alongWeb_v_1.place(stiffenerweldOrigin_v_1, uDirAbv_11, wDirAbv_11)
 
-            self.weld_stiffeer_alongWeb_v_1Model = self.weld_stiffeer_alongWeb_v_1.create_model()
+            self.weld_stiffener_alongWeb_v_1Model = self.weld_stiffener_alongWeb_v_1.create_model()
 
             stiffenerweldOrigin_v_2 = numpy.array(
-                [stiffener_gap, -y_axis + self.stiffener.L + self.weld_stiffeer_alongWeb_v.h / 2, z_axis])
+                [stiffener_gap, -y_axis + self.stiffener.L + self.weld_stiffener_alongWeb_v.h / 2, z_axis])
             uDirAbv_11 = numpy.array([1.0, 0.0, 0.0])
             wDirAbv_11 = numpy.array([0.0, 0.0, 1.0])
-            self.weld_stiffeer_alongWeb_v_2.place(stiffenerweldOrigin_v_2, uDirAbv_11, wDirAbv_11)
+            self.weld_stiffener_alongWeb_v_2.place(stiffenerweldOrigin_v_2, uDirAbv_11, wDirAbv_11)
 
-            self.weld_stiffeer_alongWeb_v_2Model = self.weld_stiffeer_alongWeb_v_2.create_model()
+            self.weld_stiffener_alongWeb_v_2Model = self.weld_stiffener_alongWeb_v_2.create_model()
 
             stiffenerweldOrigin_v_3 = numpy.array(
-                [-stiffener_gap, y_axis - self.stiffener.L - self.weld_stiffeer_alongWeb_v.h / 2, z_axis])
+                [-stiffener_gap, y_axis - self.stiffener.L - self.weld_stiffener_alongWeb_v.h / 2, z_axis])
             uDirAbv_11 = numpy.array([1.0, 0.0, 0.0])
             wDirAbv_11 = numpy.array([0.0, 0, 1.0])
-            self.weld_stiffeer_alongWeb_v_3.place(stiffenerweldOrigin_v_3, uDirAbv_11, wDirAbv_11)
+            self.weld_stiffener_alongWeb_v_3.place(stiffenerweldOrigin_v_3, uDirAbv_11, wDirAbv_11)
 
-            self.weld_stiffeer_alongWeb_v_3Model = self.weld_stiffeer_alongWeb_v_3.create_model()
+            self.weld_stiffener_alongWeb_v_3Model = self.weld_stiffener_alongWeb_v_3.create_model()
 
             stiffenerweldOrigin_v_4 = numpy.array(
-                [-stiffener_gap, -y_axis + self.stiffener.L + self.weld_stiffeer_alongWeb_v.h / 2, z_axis])
+                [-stiffener_gap, -y_axis + self.stiffener.L + self.weld_stiffener_alongWeb_v.h / 2, z_axis])
             uDirAbv_11 = numpy.array([1.0, 0.0, 0.0])
             wDirAbv_11 = numpy.array([0.0, 0.0, 1.0])
-            self.weld_stiffeer_alongWeb_v_4.place(stiffenerweldOrigin_v_4, uDirAbv_11, wDirAbv_11)
+            self.weld_stiffener_alongWeb_v_4.place(stiffenerweldOrigin_v_4, uDirAbv_11, wDirAbv_11)
 
-            self.weld_stiffeer_alongWeb_v_4Model = self.weld_stiffeer_alongWeb_v_4.create_model()
+            self.weld_stiffener_alongWeb_v_4Model = self.weld_stiffener_alongWeb_v_4.create_model()
 
         # Todo:  if self.BP.stiffener_along_flange == 'Yes':
 
         x_axis = self.column.B / 2 + self.weld_stiffener_algflng_v.h/2  # todo: add web length here
-        z_axis = 0  # self.stiffener_algflangeL1.H / 2 + self.weld_stiffeer_alongWeb_h.h
+        z_axis = 0  # self.stiffener_algflangeL1.H / 2 + self.weld_stiffener_alongWeb_h.h
         y_axis = self.column.D / 2 - self.weld_stiffener_algflng_v.b/2
         if self.Weld_type == "Fillet":
-            z_axis = 0  # self.stiffener_algflangeL1.H / 2 + self.weld_stiffeer_alongWeb_h.h
+            z_axis = 0  # self.stiffener_algflangeL1.H / 2 + self.weld_stiffener_alongWeb_h.h
         else:
             z_axis = self.weld_stiffener_acrsWeb_gh.h
         weld_stiffener_algflng_v1OriginL = numpy.array([x_axis, y_axis, z_axis])
@@ -689,7 +731,7 @@ class BasePlateCad(object):
         if self.Weld_type == "Fillet":
             #Fillet weld for stiffeners across flange
             x_axis = self.column.B / 2 + self.weld_stiffener_algflng_v.h  # todo: add web length here
-            z_axis = 0  # self.stiffener_algflangeL1.H / 2 + self.weld_stiffeer_alongWeb_h.h
+            z_axis = 0  # self.stiffener_algflangeL1.H / 2 + self.weld_stiffener_alongWeb_h.h
             y_axis = self.column.D / 2 #- self.weld_stiffener_algflng_v.b/2
             weld_stiffener_algflng_h11OriginL = numpy.array([x_axis, y_axis, z_axis])
             weld_stiffener_algflng_h11L_uDir = numpy.array([0.0, 1.0, 0.0])
@@ -757,7 +799,7 @@ class BasePlateCad(object):
 
         else: #"Groove"
             x_axis = self.column.B / 2 + self.weld_stiffener_algflng_v.h + self.stiffener_algflangeL1.L  # todo: add web length here
-            z_axis = self.weld_stiffener_algflag_gh.h/2  # self.stiffener_algflangeL1.H / 2 + self.weld_stiffeer_alongWeb_h.h
+            z_axis = self.weld_stiffener_algflag_gh.h/2  # self.stiffener_algflangeL1.H / 2 + self.weld_stiffener_alongWeb_h.h
             y_axis = self.column.D / 2 - self.weld_stiffener_algflag_gh.b/2
             weld_stiffener_algflag_gh1OriginL = numpy.array([x_axis, y_axis, z_axis])
             weld_stiffener_algflag_gh1L_uDir = numpy.array([0.0, -1.0, 0.0])
@@ -798,7 +840,7 @@ class BasePlateCad(object):
         x_axis = self.column.t/2 + self.weld_stiffener_acrsWeb_v.h/2  #todo: add weld ht here
         y_axis = 0.0
         if self.Weld_type == "Fillet":
-            z_axis = self.stiffener_acrsWeb.R22    #self.stiffener.W / 2 #+ self.weld_stiffeer_alongWeb_h.h
+            z_axis = self.stiffener_acrsWeb.R22    #self.stiffener.W / 2 #+ self.weld_stiffener_alongWeb_h.h
         else:
             z_axis = self.stiffener_acrsWeb.R22 + self.weld_stiffener_acrsWeb_gh.h
 
@@ -815,6 +857,7 @@ class BasePlateCad(object):
         self.weld_stiffener_acrsWeb_v2.place(weld_stiffener_acrsWeb_v2OriginL, weld_stiffener_acrsWeb_v2L_uDir, weld_stiffener_acrsWeb_v2L_wDir)
 
         self.weld_stiffener_acrsWeb_v2Model = self.weld_stiffener_acrsWeb_v2.create_model()
+
 
 
         #horizonrtal fillet welds for stiffner across web
@@ -870,6 +913,39 @@ class BasePlateCad(object):
 
             self.weld_stiffener_acrsWeb_gh2Model = self.weld_stiffener_acrsWeb_gh2.create_model()
 
+        #todo: if stiffener inside flange == true:
+
+        x_axis =  self.column.t/2 + self.column.R1 + self.extraspace
+        y_axis = self.stiffener_insideflange.L/2 + self.weld_stiffener_inflange.h/2        #self.stiffener_acrsWeb.T/2 + self.stiffener_insideflange.L/2 + self.weld_stiffener_inflange.h
+        z_axis = self.stiffener_acrsWeb.W + self.weld_stiffener_inflange.b
+
+        weld_stiffener_inflange11OriginL = numpy.array([x_axis, y_axis, z_axis])
+        weld_stiffener_inflange11L_uDir = numpy.array([0.0, 0.0, 1.0])
+        weld_stiffener_inflange11L_wDir = numpy.array([1.0, 0.0, 0.0])
+        self.weld_stiffener_inflange11.place(weld_stiffener_inflange11OriginL, weld_stiffener_inflange11L_uDir, weld_stiffener_inflange11L_wDir)
+
+        self.weld_stiffener_inflange11Model = self.weld_stiffener_inflange11.create_model()
+
+        weld_stiffener_inflange21OriginL = numpy.array([-x_axis, y_axis, z_axis])
+        weld_stiffener_inflange21L_uDir = numpy.array([0.0, 0.0, 1.0])
+        weld_stiffener_inflange21L_wDir = numpy.array([-1.0, 0.0, 0.0])
+        self.weld_stiffener_inflange21.place(weld_stiffener_inflange21OriginL, weld_stiffener_inflange21L_uDir, weld_stiffener_inflange21L_wDir)
+
+        self.weld_stiffener_inflange21Model = self.weld_stiffener_inflange21.create_model()
+
+        weld_stiffener_inflange12OriginL = numpy.array([x_axis, -y_axis, z_axis])
+        weld_stiffener_inflange12L_uDir = numpy.array([0.0, 0.0, 1.0])
+        weld_stiffener_inflange12L_wDir = numpy.array([1.0, 0.0, 0.0])
+        self.weld_stiffener_inflange12.place(weld_stiffener_inflange12OriginL, weld_stiffener_inflange12L_uDir, weld_stiffener_inflange12L_wDir)
+
+        self.weld_stiffener_inflange12Model = self.weld_stiffener_inflange12.create_model()
+
+        weld_stiffener_inflange22OriginL = numpy.array([-x_axis, -y_axis, z_axis])
+        weld_stiffener_inflange22L_uDir = numpy.array([0.0, 0.0, 1.0])
+        weld_stiffener_inflange22L_wDir = numpy.array([-1.0, 0.0, 0.0])
+        self.weld_stiffener_inflange22.place(weld_stiffener_inflange22OriginL, weld_stiffener_inflange22L_uDir, weld_stiffener_inflange22L_wDir)
+
+        self.weld_stiffener_inflange22Model = self.weld_stiffener_inflange22.create_model()
 
     def create_nut_bolt_array(self):
         """
@@ -932,44 +1008,48 @@ class BasePlateCad(object):
         # welded_sec = [self.weldAbvFlang_11Model, self.weldAbvFlang_12Model, self.weldBelwFlang_11Model, self.weldBelwFlang_12Model,
         #               self.weldBelwFlang_13Model, self.weldBelwFlang_14Model, self.weldSideWeb_11Model, self.weldSideWeb_12Model]
 
-        # welded_sec = [self.weldAbvFlang_11Model, self.weldAbvFlang_12Model, self.weldSideWeb_11Model, self.gussetweld_1Model, self.gussetweld_2Model, self.weld_stiffeer_alongWeb_h_1Model, self.weld_stiffeer_alongWeb_h_2Model, self.weld_stiffeer_alongWeb_v_1Model, self.weld_stiffeer_alongWeb_v_2Model]
+        # welded_sec = [self.weldAbvFlang_11Model, self.weldAbvFlang_12Model, self.weldSideWeb_11Model, self.gussetweld_1Model, self.gussetweld_2Model, self.weld_stiffener_alongWeb_h_1Model, self.weld_stiffener_alongWeb_h_2Model, self.weld_stiffener_alongWeb_v_1Model, self.weld_stiffener_alongWeb_v_2Model]
         if self.numberOfBolts == 4:
             if self.Weld_type == "Fillet":
-                welded_sec = [self.weldAbvFlang_11Model, self.weldAbvFlang_12Model, self.weldSideWeb_11Model, self.weld_stiffeer_alongWeb_v_1Model, self.weld_stiffeer_alongWeb_v_2Model, self.weld_stiffeer_alongWeb_h_11Model, self.weld_stiffeer_alongWeb_h_21Model, self.weld_stiffeer_alongWeb_h_12Model, self.weld_stiffeer_alongWeb_h_22Model,
+                welded_sec = [self.weldAbvFlang_11Model, self.weldAbvFlang_12Model, self.weldSideWeb_11Model, self.weld_stiffener_alongWeb_v_1Model, self.weld_stiffener_alongWeb_v_2Model, self.weld_stiffener_alongWeb_h_11Model, self.weld_stiffener_alongWeb_h_21Model, self.weld_stiffener_alongWeb_h_12Model, self.weld_stiffener_alongWeb_h_22Model,
                               self.weld_stiffener_algflng_v1Model, self.weld_stiffener_algflng_v2Model, self.weld_stiffener_algflng_v3Model, self.weld_stiffener_algflng_v4Model,
                               self.weld_stiffener_acrsWeb_v1Model, self.weld_stiffener_acrsWeb_v2Model, self.weld_stiffener_acrsWeb_h1Model, self.weld_stiffener_acrsWeb_gh2Model, self.weld_stiffener_acrsWeb_h3Model, self.weld_stiffener_acrsWeb_h4Model,
                               self.weld_stiffener_algflng_h11Model, self.weld_stiffener_algflng_h12Model, self.weld_stiffener_algflng_h21Model, self.weld_stiffener_algflng_h22Model,
-                              self.weld_stiffener_algflng_h31Model, self.weld_stiffener_algflng_h32Model, self.weld_stiffener_algflng_h41Model, self.weld_stiffener_algflng_h42Model]
+                              self.weld_stiffener_algflng_h31Model, self.weld_stiffener_algflng_h32Model, self.weld_stiffener_algflng_h41Model, self.weld_stiffener_algflng_h42Model,
+                              self.weld_stiffener_inflange11Model, self.weld_stiffener_inflange12Model, self.weld_stiffener_inflange21Model, self.weld_stiffener_inflange22Model]
             else:
                 welded_sec = [self.weldAbvFlang_11Model, self.weldAbvFlang_12Model, self.weldSideWeb_11Model,
-                              self.weld_stiffeer_alongWeb_v_1Model, self.weld_stiffeer_alongWeb_v_2Model,
-                              self.weld_stiffeer_alongWeb_gh1Model, self.weld_stiffeer_alongWeb_gh2Model,
+                              self.weld_stiffener_alongWeb_v_1Model, self.weld_stiffener_alongWeb_v_2Model,
+                              self.weld_stiffener_alongWeb_gh1Model, self.weld_stiffener_alongWeb_gh2Model,
                               self.weld_stiffener_algflng_v1Model, self.weld_stiffener_algflng_v2Model,
                               self.weld_stiffener_algflng_v3Model, self.weld_stiffener_algflng_v4Model,
                               self.weld_stiffener_acrsWeb_v1Model, self.weld_stiffener_acrsWeb_v2Model,
                               self.weld_stiffener_acrsWeb_gh1Model, self.weld_stiffener_acrsWeb_gh2Model,
-                              self.weld_stiffener_algflag_gh1Model, self.weld_stiffener_algflag_gh2Model, self.weld_stiffener_algflag_gh3Model, self.weld_stiffener_algflag_gh4Model]
+                              self.weld_stiffener_algflag_gh1Model, self.weld_stiffener_algflag_gh2Model, self.weld_stiffener_algflag_gh3Model, self.weld_stiffener_algflag_gh4Model,
+                              self.weld_stiffener_inflange11Model, self.weld_stiffener_inflange12Model, self.weld_stiffener_inflange21Model, self.weld_stiffener_inflange22Model]
 
         if self.numberOfBolts == 6:
             if self.Weld_type == "Fillet":
-                welded_sec = [self.weldAbvFlang_11Model, self.weldAbvFlang_12Model, self.weldSideWeb_11Model, self.weld_stiffeer_alongWeb_v_1Model, self.weld_stiffeer_alongWeb_v_2Model, self.weld_stiffeer_alongWeb_h_11Model, self.weld_stiffeer_alongWeb_h_21Model, self.weld_stiffeer_alongWeb_h_12Model, self.weld_stiffeer_alongWeb_h_22Model,
-                              self.weld_stiffeer_alongWeb_v_3Model, self.weld_stiffeer_alongWeb_v_4Model,self.weld_stiffeer_alongWeb_h_31Model, self.weld_stiffeer_alongWeb_h_41Model,self.weld_stiffeer_alongWeb_h_32Model, self.weld_stiffeer_alongWeb_h_42Model,
+                welded_sec = [self.weldAbvFlang_11Model, self.weldAbvFlang_12Model, self.weldSideWeb_11Model, self.weld_stiffener_alongWeb_v_1Model, self.weld_stiffener_alongWeb_v_2Model, self.weld_stiffener_alongWeb_h_11Model, self.weld_stiffener_alongWeb_h_21Model, self.weld_stiffener_alongWeb_h_12Model, self.weld_stiffener_alongWeb_h_22Model,
+                              self.weld_stiffener_alongWeb_v_3Model, self.weld_stiffener_alongWeb_v_4Model,self.weld_stiffener_alongWeb_h_31Model, self.weld_stiffener_alongWeb_h_41Model,self.weld_stiffener_alongWeb_h_32Model, self.weld_stiffener_alongWeb_h_42Model,
                               self.weld_stiffener_algflng_v1Model, self.weld_stiffener_algflng_v2Model, self.weld_stiffener_algflng_v3Model, self.weld_stiffener_algflng_v4Model,
                               self.weld_stiffener_acrsWeb_v1Model, self.weld_stiffener_acrsWeb_v2Model, self.weld_stiffener_acrsWeb_h1Model, self.weld_stiffener_acrsWeb_h2Model, self.weld_stiffener_acrsWeb_h3Model, self.weld_stiffener_acrsWeb_h4Model,
                               self.weld_stiffener_algflng_h11Model, self.weld_stiffener_algflng_h12Model, self.weld_stiffener_algflng_h21Model, self.weld_stiffener_algflng_h22Model,
-                              self.weld_stiffener_algflng_h31Model, self.weld_stiffener_algflng_h32Model, self.weld_stiffener_algflng_h41Model, self.weld_stiffener_algflng_h42Model]
+                              self.weld_stiffener_algflng_h31Model, self.weld_stiffener_algflng_h32Model, self.weld_stiffener_algflng_h41Model, self.weld_stiffener_algflng_h42Model,
+                              self.weld_stiffener_inflange11Model, self.weld_stiffener_inflange12Model, self.weld_stiffener_inflange21Model, self.weld_stiffener_inflange22Model]
 
             else:
                 welded_sec = [self.weldAbvFlang_11Model, self.weldAbvFlang_12Model, self.weldSideWeb_11Model,
-                              self.weld_stiffeer_alongWeb_v_1Model, self.weld_stiffeer_alongWeb_v_2Model,
-                              self.weld_stiffeer_alongWeb_gh1Model, self.weld_stiffeer_alongWeb_gh2Model,
-                              self.weld_stiffeer_alongWeb_gh3Model, self.weld_stiffeer_alongWeb_gh4Model,
-                              self.weld_stiffeer_alongWeb_v_3Model, self.weld_stiffeer_alongWeb_v_4Model,
+                              self.weld_stiffener_alongWeb_v_1Model, self.weld_stiffener_alongWeb_v_2Model,
+                              self.weld_stiffener_alongWeb_gh1Model, self.weld_stiffener_alongWeb_gh2Model,
+                              self.weld_stiffener_alongWeb_gh3Model, self.weld_stiffener_alongWeb_gh4Model,
+                              self.weld_stiffener_alongWeb_v_3Model, self.weld_stiffener_alongWeb_v_4Model,
                               self.weld_stiffener_algflng_v1Model, self.weld_stiffener_algflng_v2Model,
                               self.weld_stiffener_algflng_v3Model, self.weld_stiffener_algflng_v4Model,
                               self.weld_stiffener_acrsWeb_v1Model, self.weld_stiffener_acrsWeb_v2Model,
                               self.weld_stiffener_acrsWeb_gh1Model, self.weld_stiffener_acrsWeb_gh2Model,
-                              self.weld_stiffener_algflag_gh1Model, self.weld_stiffener_algflag_gh2Model, self.weld_stiffener_algflag_gh3Model, self.weld_stiffener_algflag_gh4Model]
+                              self.weld_stiffener_algflag_gh1Model, self.weld_stiffener_algflag_gh2Model, self.weld_stiffener_algflag_gh3Model, self.weld_stiffener_algflag_gh4Model,
+                              self.weld_stiffener_inflange11Model, self.weld_stiffener_inflange12Model, self.weld_stiffener_inflange21Model, self.weld_stiffener_inflange22Model]
 
         welds = welded_sec[0]
 
@@ -984,7 +1064,8 @@ class BasePlateCad(object):
         # plate_list = [self.baseplateModel, self.gusset1Model, self.gusset2Model, self.stiffener1Model,
         #               self.stiffener2Model, self.stiffener3Model, self.stiffener4Model]
 
-        plate_list = [self.baseplateModel,  self.stiffener1Model, self.stiffener3Model, self.stiffener_algflangeL1Model, self.stiffener_algflangeR1Model, self.stiffener_algflangeL2Model, self.stiffener_algflangeR2Model, self.stiffener_acrsWeb1Model, self.stiffener_acrsWeb2Model]
+        plate_list = [self.baseplateModel,  self.stiffener1Model, self.stiffener3Model, self.stiffener_algflangeL1Model, self.stiffener_algflangeR1Model, self.stiffener_algflangeL2Model, self.stiffener_algflangeR2Model,
+                      self.stiffener_acrsWeb1Model, self.stiffener_acrsWeb2Model, self.stiffener_insideflange1Model, self.stiffener_insideflange2Model]
         plate = plate_list[0]
 
         for item in plate_list[1:]:
@@ -1089,6 +1170,8 @@ if __name__ == '__main__':
     stiffener_algflangeR = Stiffener_flange(H=gusset.W, L=(baseplate.W - column.B) / 2 - 10, T=column.T + 5,
                                            t_f=column.T, L_h=50, L_v=100, to_left=False)
     stiffener_algflange_tapperLength = (stiffener_algflangeR.T - column.T) * 5
+    
+    stiffener_insideflange = StiffenerPlate(L= (column.D - 2*column.T - 2 * 6), W= (column.B- column.t - 2*column.R1 - 2 * 5)/2, T =12)  #self.extraspace=5
 
     weld_stiffener_algflng_v = GrooveWeld(b= column.T, h = 10, L = stiffener_algflangeL.H)
     weld_stiffener_algflng_h = FilletWeld(b= 10, h= 10, L= stiffener_algflangeL.L)    #Todo: create another weld for inner side of the stiffener
@@ -1097,12 +1180,13 @@ if __name__ == '__main__':
     weld_stiffener_acrsWeb_v = GrooveWeld(b= stiffener_acrsWeb.T, h = 10, L = stiffener_acrsWeb.W - stiffener_acrsWeb.R22)
     weld_stiffener_acrsWeb_h = FilletWeld(b= 10, h= 10, L = stiffener_acrsWeb.L - stiffener_acrsWeb.R22)
     weld_stiffener_acrsWeb_gh = GrooveWeld(b= stiffener_acrsWeb.T, h = 10, L = stiffener_acrsWeb.L - stiffener_acrsWeb.R22)
-
-
+    
     gussetweld = GrooveWeld(b=gusset.T, h = 10, L= gusset.L)
-    weld_stiffeer_alongWeb_h = FilletWeld(b= 10, h= 10, L=stiffener.L - stiffener.R22)
-    weld_stiffeer_alongWeb_v = GrooveWeld(b= stiffener.T, h=10, L=stiffener.W - stiffener.R22)
-    weld_stiffeer_alongWeb_gh = GrooveWeld(b= stiffener.T, h=10, L=stiffener.L - stiffener.R22)
+    weld_stiffener_alongWeb_h = FilletWeld(b= 10, h= 10, L=stiffener.L - stiffener.R22)
+    weld_stiffener_alongWeb_v = GrooveWeld(b= stiffener.T, h=10, L=stiffener.W - stiffener.R22)
+    weld_stiffener_alongWeb_gh = GrooveWeld(b= stiffener.T, h=10, L=stiffener.L - stiffener.R22)
+    
+    weld_stiffener_inflange = GrooveWeld(b= stiffener_insideflange.T, h = 6, L = stiffener_insideflange.W)
 
     type = 'gusset'  # 'no_gusset'
 
@@ -1120,9 +1204,9 @@ if __name__ == '__main__':
     nut_bolt_array = NutBoltArray(column, baseplate,  nut, bolt, numberOfBolts, nutSpace)
 
     basePlate = BasePlateCad(type, column, nut_bolt_array, bolthight, baseplate, weldAbvFlang, weldBelwFlang, weldSideWeb,
-                             concrete, gusset, stiffener, grout, gussetweld, weld_stiffeer_alongWeb_h, weld_stiffeer_alongWeb_gh, weld_stiffeer_alongWeb_v,
+                             concrete, gusset, stiffener, grout, gussetweld, weld_stiffener_alongWeb_h, weld_stiffener_alongWeb_gh, weld_stiffener_alongWeb_v,
                              stiffener_algflangeL, stiffener_algflangeR, stiffener_acrsWeb, weld_stiffener_algflng_v, weld_stiffener_algflng_h, weld_stiffener_algflag_gh,
-                             weld_stiffener_acrsWeb_v, weld_stiffener_acrsWeb_h, weld_stiffener_acrsWeb_gh)
+                             weld_stiffener_acrsWeb_v, weld_stiffener_acrsWeb_h, weld_stiffener_acrsWeb_gh, stiffener_insideflange, weld_stiffener_inflange)
 
     basePlate.create_3DModel()
     prism = basePlate.get_models()

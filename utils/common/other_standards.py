@@ -12,9 +12,7 @@ Started on 15 - Nov - 2018
 
 @author: ajmalbabums, Danish Ansari, Sourabh Das
 """
-import os
-import sys
-PATH_TO_DATABASE = os.path.join(sys.path[0],'ResourceFiles','Database','Intg_osdag.sqlite')
+PATH_TO_DATABASE = "ResourceFiles/Database/Intg_osdag.sqlite"
 
 import sqlite3
 import math

@@ -40,6 +40,7 @@ class BasePlateCad(object):
         self.stiffener = stiffener
         self.grout = grout
 
+
         # self.alist = None #alist
         # self.columnModel = None
         # self.baseplateModel = None
@@ -82,17 +83,24 @@ class BasePlateCad(object):
 
         self.createColumnGeometry()
         self.createBasePlateGeometry()
-        self.createWeldGeometry()
+        self.createFilletWeldGeometry()
         self.createConcreteGeometry()
         self.create_nut_bolt_array()
         self.createGroutGeometry()
+        self.createGrooveWeldGeometry()
 
     def createColumnGeometry(self):
         """
 
         :return: Geometric Orientation of this component
         """
-        columnOriginL = numpy.array([0.0, 0.0, 0.0])
+
+        if self.BP.weld_type != 'Butt Weld':
+            columnOriginL = numpy.array([0.0, 0.0, 0.0])
+
+        else:
+            columnOriginL = numpy.array([0.0, 0.0, self.weldSideWeb.h])
+
         columnL_uDir = numpy.array([1.0, 0.0, 0.0])
         columnL_wDir = numpy.array([0.0, 0.0, 1.0])
         self.column.place(columnOriginL, columnL_uDir, columnL_wDir)
@@ -161,7 +169,7 @@ class BasePlateCad(object):
         else:
             pass
 
-    def createWeldGeometry(self):
+    def createFilletWeldGeometry(self):
 
         # weld above flange
         weldAbvFlangOrigin_11 = numpy.array([self.column.B / 2, -self.column.D / 2, 0.0])
@@ -221,6 +229,34 @@ class BasePlateCad(object):
         self.weldSideWeb_11Model = self.weldSideWeb_11.create_model()
         self.weldSideWeb_12Model = self.weldSideWeb_12.create_model()
 
+    def createGrooveWeldGeometry(self):
+        # weld below flange
+        weldAbvFlangOrigin = numpy.array(
+            [self.column.B / 2, -self.column.D / 2 + self.weldAbvFlang.b / 2, self.weldAbvFlang.h / 2])
+        uDirAbv = numpy.array([0, -1.0, 0])
+        wDirAbv = numpy.array([-1.0, 0, 0])
+        self.weldAbvFlang.place(weldAbvFlangOrigin, uDirAbv, wDirAbv)
+
+        self.weldAbvFlangModel = self.weldAbvFlang.create_model()
+
+        # weld below flange
+        weldBelwFlangOrigin = numpy.array(
+            [-self.column.B / 2, self.column.D / 2 - self.weldBelwFlang.b / 2, self.weldBelwFlang.h / 2])
+        uDirBelw = numpy.array([0, 1.0, 0])
+        wDirBelw = numpy.array([1.0, 0, 0])
+        self.weldBelwFlang.place(weldBelwFlangOrigin, uDirBelw, wDirBelw)
+
+        self.weldBelwFlangModel = self.weldBelwFlang.create_model()
+
+        # Weld side web
+        weldSideWebOrigin = numpy.array(
+            [-self.column.t / 2 + self.weldSideWeb.b / 2, self.weldSideWeb.L / 2, self.weldSideWeb.h / 2])
+        uDirWeb = numpy.array([0, 0.0, 1.0])
+        wDirWeb = numpy.array([0, -1.0, 0.0])
+        self.weldSideWeb.place(weldSideWebOrigin, uDirWeb, wDirWeb)
+
+        self.weldSideWebModel = self.weldSideWeb.create_model()
+
     def create_nut_bolt_array(self):
         """
 
@@ -279,8 +315,14 @@ class BasePlateCad(object):
         :return: CAD model for all the fillet welds
         """
 
-        welded_sec = [self.weldAbvFlang_11Model, self.weldAbvFlang_12Model, self.weldBelwFlang_11Model, self.weldBelwFlang_12Model,
-                      self.weldBelwFlang_13Model, self.weldBelwFlang_14Model, self.weldSideWeb_11Model, self.weldSideWeb_12Model]
+        if self.BP.weld_type != 'Butt Weld':
+            welded_sec = [self.weldAbvFlang_11Model, self.weldAbvFlang_12Model, self.weldBelwFlang_11Model,
+                          self.weldBelwFlang_12Model,
+                          self.weldBelwFlang_13Model, self.weldBelwFlang_14Model, self.weldSideWeb_11Model,
+                          self.weldSideWeb_12Model]
+        else:
+            welded_sec = [self.weldAbvFlangModel, self.weldBelwFlangModel, self.weldSideWebModel]
+
         welds = welded_sec[0]
 
         for comp in welded_sec[1:]:
@@ -347,12 +389,14 @@ if __name__ == '__main__':
     from cad.items.plate import Plate
     from cad.items.ISection import ISection
     from cad.items.filletweld import FilletWeld
+    from cad.items.groove_weld import GrooveWeld
     from cad.items.concrete import Concrete
     from cad.BasePlateCad.nutBoltPlacement import NutBoltArray
     from cad.items.anchor_bolt import *
     from cad.items.nut import Nut
     from cad.items.stiffener_plate import StiffenerPlate
     from cad.items.concrete import Concrete
+    from cad.items.grout import Grout
 
     import OCC.Core.V3d
     from OCC.Core.Quantity import Quantity_NOC_SADDLEBROWN, Quantity_NOC_BLUE1
@@ -360,20 +404,30 @@ if __name__ == '__main__':
     from utilities import osdag_display_shape
     # from cad.common_logic import CommonDesignLogic
 
+    # from OCC.Core.Graphic3d import Quantity_NOC_GRAY as GRAY
+    from OCC.Core.Quantity import Quantity_NOC_GRAY25 as GRAY
     from OCC.gp import gp_Pnt
-    from OCC.Core.Graphic3d import Quantity_NOC_GRAY as GRAY
     from OCC.Display.SimpleGui import init_display
 
     display, start_display, add_menu, add_function_to_menu = init_display()
 
     column = ISection(B=250, T=13.7, D=450, t=9.8, R1=15.0, R2=7.5, alpha=94, length=1500, notchObj=None)
     baseplate = Plate(L=650, W=415, T=45)
-    weldAbvFlang = FilletWeld(b=10, h=10, L=250)
-    weldBelwFlang = FilletWeld(b=10, h=10, L=100)
-    weldSideWeb = FilletWeld(b=10, h=10, L=420)
+
+    weldType = 'Groove'  # 'Fillet'
+
+    if weldType == 'Fillet':
+        weldAbvFlang = FilletWeld(b=10, h=10, L=250)
+        weldBelwFlang = FilletWeld(b=10, h=10, L=100)
+        weldSideWeb = FilletWeld(b=10, h=10, L=420)
+
+    else:
+        weldAbvFlang = GrooveWeld(b=column.T, h=10, L=column.B)
+        weldBelwFlang = GrooveWeld(b=column.T, h=10, L=column.B)
+        weldSideWeb = GrooveWeld(b=column.t, h=10, L=column.D)
     # concrete = Concrete(L= baseplate.W*1.5, W= baseplate.L*1.5, T= baseplate.T*10)
     concrete = Plate(L=baseplate.L * 1.5, W=baseplate.W * 1.5, T=baseplate.T * 10)
-    grout = Concrete(L=baseplate.L + 200, W=baseplate.W + 200, T=50)
+    grout = Grout(L=concrete.L, W=concrete.W, T=50)
 
     gusset = StiffenerPlate(L=baseplate.W, W=200, T=14, L11=(baseplate.W - (column.B + 100)) / 2, L12=200 - 100,
                             R11=(baseplate.W - (column.B + 100)) / 2, R12=200 - 100)
@@ -415,11 +469,11 @@ if __name__ == '__main__':
 
     # display.DisplayShape(prism, update=True)
     display.DisplayShape(column, update=True)
-    display.DisplayColoredShape(plate, color='BLUE', update=True)
-    display.DisplayColoredShape(weld, color='RED', update=True)
-    display.DisplayColoredShape(nut_bolt, color='YELLOW', update=True)
+    display.DisplayShape(plate, color='BLUE', update=True)
+    display.DisplayShape(weld, color='RED', update=True)
+    display.DisplayShape(nut_bolt, color='YELLOW', update=True)
     display.DisplayShape(conc, color=GRAY, transparency=0.5, update=True)
-    display.DisplayShape(grt, colour=GRAY, update=True)
+    display.DisplayShape(grt, color=GRAY, transparency=0.5, update=True)
     display.DisableAntiAliasing()
     start_display()
     # display.ExportToImage("/home/rahul/Osdag_workspace/3DtestbasePlatw.png")
